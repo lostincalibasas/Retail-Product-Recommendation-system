@@ -45,6 +45,14 @@ See [the shared contract](docs/phase2_contract.md) for exact candidate selection
 ranking interfaces. [Phase 1 exploration](reports/data_exploration.md) remains the
 source-data baseline.
 
+The [data checkpoint report](reports/phase2_data_checkpoint.md) records measured
+coverage and group diagnostics. Regenerate it, including artifact checksum and
+group-offset verification, with:
+
+```powershell
+.\.venv-phase2\python.exe scripts/report_data_checkpoint.py
+```
+
 ## Dataset provenance and license
 
 - Dataset: [Dunnhumby - The Complete Journey on Kaggle](https://www.kaggle.com/datasets/frtgnn/dunnhumby-the-complete-journey)

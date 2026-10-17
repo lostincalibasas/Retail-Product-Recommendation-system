@@ -75,6 +75,8 @@ must concatenate shards in manifest order with their corresponding group sizes;
 it must never globally sort one without rebuilding the other. Filter whole
 non-trainable groups for LambdaRank fitting, while preserving all evaluation groups.
 The baseline and ranker must receive the exact same candidate rows.
+Read ordered model inputs from the schema's explicit `feature_order` list; JSON
+object key order is not an input-order contract.
 
 `manifest.json` with `status=complete` is the artifact completion marker. Output
 directories cannot be overwritten. A failed run retains an `INCOMPLETE` marker

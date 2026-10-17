@@ -1,0 +1,129 @@
+{
+  "artifact_path": "artifacts/data/retail-ranking-v1",
+  "artifact_verification": {
+    "all_group_offsets_verified": true,
+    "parquet_files_verified": 111,
+    "source_and_code_hashes_match": true,
+    "total_parquet_bytes": 297534073
+  },
+  "build_git_commit": "7de684455276b4285fe8eba77498fcabeb8d4892",
+  "build_git_dirty": false,
+  "elapsed_seconds": 277.969,
+  "invariance_checks": [
+    {
+      "cutoff": 365,
+      "passed": true,
+      "split": "train"
+    },
+    {
+      "cutoff": 533,
+      "passed": true,
+      "split": "train"
+    },
+    {
+      "cutoff": 540,
+      "passed": true,
+      "split": "validation"
+    },
+    {
+      "cutoff": 617,
+      "passed": true,
+      "split": "validation"
+    }
+  ],
+  "manifest_sha256": "3d09e8064531ddea7b173dc278468e781d4b52f9a5a5ce18e5581c74f69ba925",
+  "python": "3.12.15",
+  "source_audit": {
+    "catalog_rows": 92353,
+    "loaded_day_max": 624,
+    "loaded_day_min": 1,
+    "loaded_rows": 2234076,
+    "nonpositive_quantity_rows_excluded_from_history_and_labels": 12405,
+    "positive_quantity_negative_sales_rows_retained": 0,
+    "read_filter": "DAY <= 624",
+    "sources": {
+      "data/processed/product.parquet": "0b7a6cb5f35f99c8317adfb02a8e1157e662872b48c63a7d6d06dddbace7bec8",
+      "data/processed/transaction_data.parquet": "6ee92f610f80bea515760f614dbf197ee734118163aaa362e57e58e3b4eda69f"
+    },
+    "test_rows_loaded": 0
+  },
+  "splits": {
+    "train": {
+      "candidate_miss_groups": 3310,
+      "candidate_miss_rate": 0.09848552471064298,
+      "candidate_recall_macro": 0.371512313321399,
+      "candidate_recall_macro_sum": 12486.1573384189,
+      "candidate_recall_micro": 0.32659515911117915,
+      "candidate_rows": 12488000,
+      "completely_missed_target_products": 457553,
+      "group_size": {
+        "max": 200,
+        "mean": 200.0,
+        "min": 200,
+        "p50": 200.0,
+        "p95": 200.0
+      },
+      "group_size_histogram": {
+        "200": 62440
+      },
+      "groups": 62440,
+      "groups_with_target_purchases": 33609,
+      "new_household_window_occurrences_excluded": 1,
+      "no_purchase_groups": 28831,
+      "positive_labels": 221909,
+      "retrieved_target_products": 221909,
+      "snapshots": 25,
+      "target_products": 679462,
+      "trainable_groups": 30299,
+      "zero_positive_groups": 32141
+    },
+    "validation": {
+      "candidate_miss_groups": 1632,
+      "candidate_miss_rate": 0.10075939988886831,
+      "candidate_recall_macro": 0.3606077454736476,
+      "candidate_recall_macro_sum": 5840.76365343667,
+      "candidate_recall_micro": 0.3169382421121007,
+      "candidate_rows": 5995400,
+      "completely_missed_target_products": 221881,
+      "group_size": {
+        "max": 200,
+        "mean": 200.0,
+        "min": 200,
+        "p50": 200.0,
+        "p95": 200.0
+      },
+      "group_size_histogram": {
+        "200": 29977
+      },
+      "groups": 29977,
+      "groups_with_target_purchases": 16197,
+      "new_household_window_occurrences_excluded": 1,
+      "no_purchase_groups": 13780,
+      "positive_labels": 102952,
+      "retrieved_target_products": 102952,
+      "snapshots": 12,
+      "target_products": 324833,
+      "trainable_groups": 14565,
+      "zero_positive_groups": 15412
+    }
+  },
+  "test": {
+    "cutoffs": [
+      624,
+      631,
+      638,
+      645,
+      652,
+      659,
+      666,
+      673,
+      680,
+      687,
+      694,
+      701
+    ],
+    "first_target_day": 625,
+    "last_target_day": 708,
+    "status": "not_materialized_before_model_selection"
+  }
+}
