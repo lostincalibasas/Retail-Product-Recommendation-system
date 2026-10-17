@@ -1,0 +1,16 @@
+{
+  "seed": 42,
+  "horizon_days": 7,
+  "max_candidates": 200,
+  "repeat_quota": 80,
+  "category_quota": 60,
+  "preferred_categories": 3,
+  "popularity_days": 28,
+  "affinity_days": 84,
+  "train_first_cutoff": 365,
+  "train_last_cutoff": 533,
+  "validation_first_cutoff": 540,
+  "validation_last_cutoff": 617,
+  "test_first_cutoff": 624,
+  "test_last_cutoff": 701
+}

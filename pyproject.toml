@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personalized-retail-recs"
+version = "0.2.0"
+description = "Temporal household product recommendation portfolio project"
+requires-python = ">=3.12,<3.13"
+dependencies = ["numpy>=2.2,<2.3", "pandas>=2.3,<2.4", "pyarrow>=24,<25"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

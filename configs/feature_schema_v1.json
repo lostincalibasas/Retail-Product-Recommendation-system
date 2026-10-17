@@ -1,0 +1,71 @@
+{
+  "version": "retail-ranking-v1",
+  "identifiers": [
+    "household_key",
+    "cutoff_day",
+    "PRODUCT_ID"
+  ],
+  "feature_order": [
+    "hh_purchase_rows_7d",
+    "hh_purchase_rows_28d",
+    "hh_purchase_rows_84d",
+    "hh_spend_28d",
+    "hh_products_84d",
+    "hh_recency_days",
+    "product_households_7d",
+    "product_households_28d",
+    "product_households_84d",
+    "product_purchase_rows_28d",
+    "product_mean_price_28d",
+    "product_recency_days",
+    "pair_purchase_rows_7d",
+    "pair_purchase_rows_28d",
+    "pair_purchase_rows_84d",
+    "pair_quantity_84d",
+    "pair_spend_84d",
+    "pair_recency_days",
+    "pair_mean_price_84d",
+    "category_affinity_84d",
+    "brand_affinity_84d",
+    "price_to_household_mean",
+    "is_repeat_candidate",
+    "is_category_candidate",
+    "is_popular_candidate"
+  ],
+  "features": {
+    "hh_purchase_rows_7d": "float32",
+    "hh_purchase_rows_28d": "float32",
+    "hh_purchase_rows_84d": "float32",
+    "hh_spend_28d": "float32",
+    "hh_products_84d": "float32",
+    "hh_recency_days": "float32",
+    "product_households_7d": "float32",
+    "product_households_28d": "float32",
+    "product_households_84d": "float32",
+    "product_purchase_rows_28d": "float32",
+    "product_mean_price_28d": "float32",
+    "product_recency_days": "float32",
+    "pair_purchase_rows_7d": "float32",
+    "pair_purchase_rows_28d": "float32",
+    "pair_purchase_rows_84d": "float32",
+    "pair_quantity_84d": "float32",
+    "pair_spend_84d": "float32",
+    "pair_recency_days": "float32",
+    "pair_mean_price_84d": "float32",
+    "category_affinity_84d": "float32",
+    "brand_affinity_84d": "float32",
+    "price_to_household_mean": "float32",
+    "is_repeat_candidate": "float32",
+    "is_category_candidate": "float32",
+    "is_popular_candidate": "float32"
+  },
+  "label": {
+    "relevance": "int8"
+  },
+  "group": [
+    "household_key",
+    "cutoff_day"
+  ],
+  "history": "DAY <= cutoff_day; positive QUANTITY only",
+  "target": "cutoff_day < DAY <= cutoff_day + 7; positive QUANTITY only"
+}

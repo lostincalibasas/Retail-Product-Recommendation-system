@@ -1,6 +1,49 @@
-# Smart Order ML: Complete Journey Phase 1
+# Personalized Retail Recommendation Engine
 
-A small, reproducible data-ingestion baseline for a retail SKU recommendation interview prototype. This phase covers only source-data acquisition, CSV-to-Parquet conversion, and data validation/exploration. It does not train a model or claim customer purchases are sales-representative acceptance labels.
+An independent ML portfolio project using Dunnhumby Complete Journey to recommend
+products to households over the following seven days. Phase 1 provides verified
+ingestion; the first Phase 2 checkpoint implements historical candidates, features,
+labels, chronological development datasets, and coverage diagnostics. LightGBM
+LambdaRank training follows approval of the data checkpoint. Purchases are observed
+behavior, not sales-representative acceptance or causal uplift labels.
+
+## Phase 2 data checkpoint
+
+Use the isolated Python 3.12 environment (`.venv-phase2/python.exe` on this Windows
+Conda setup). The original Python 3.14 Phase 1 `.venv` remains separate.
+
+To reproduce the runtime on Windows x86-64, with Conda installed:
+
+```powershell
+conda create --prefix .venv-phase2 --file environment/conda-win-64.lock.txt --yes
+.\.venv-phase2\python.exe -m pip install -r requirements-phase2.lock.txt
+.\.venv-phase2\python.exe scripts/smoke_environment.py
+.\.venv-phase2\python.exe -m pip check
+.\.venv-phase2\python.exe -m pytest -q
+.\.venv-phase2\python.exe scripts/build_training_data.py --config configs/data_v1.json
+```
+
+The explicit Conda lock captures the runtime; the pip lock captures exact resolved
+Python packages. The Conda lock is Windows-specific. A Linux lock and Docker image
+will be validated at the later serving checkpoint. `requirements-phase2.txt`
+records selected direct dependencies. Imports/native operations are smoke-tested
+without fitting a model or starting an API service.
+
+The builder writes ignored, versioned artifacts under `artifacts/data/retail-ranking-v1/`:
+rows, independent target sets, group offsets/sizes, per-cutoff diagnostics, schema,
+configuration and a checksum manifest. It refuses to overwrite an existing build;
+use `--output artifacts/data/<new-run-name>` for another run. `--limit-cutoffs 1`
+is a marked smoke build, not the complete dataset.
+
+Training cutoffs are 365–533 (25 weekly snapshots); validation cutoffs are 540–617
+(12). History includes the cutoff day; labels cover the next seven days. The loader
+excludes transactions after day 624. Test targets 625–708 are not materialized until
+model selection is finished. No model or ranking metrics are claimed at this stage.
+
+See [the shared contract](docs/phase2_contract.md) for exact candidate selection,
+25 ordered features, population/label definitions, agent ownership, and future
+ranking interfaces. [Phase 1 exploration](reports/data_exploration.md) remains the
+source-data baseline.
 
 ## Dataset provenance and license
 
@@ -57,6 +100,8 @@ scripts/        Reproducible ingestion and validation
 
 The checks are practical diagnostics, not a complete formal schema contract: this extract has no store dimension, and an unmatched key is surfaced for investigation rather than silently filtered. The transaction records describe household purchases and `SALES_VALUE`; they do not identify whether a sales representative accepted a recommendation.
 
-## Scope boundary
+## Current scope boundary
 
-Phase 2 (features, modeling, evaluation, and deployment) is not included. We will not move into it without your confirmation.
+The first Phase 2 data/feature integration checkpoint is authorized. Model training,
+held-out test evaluation, SHAP integration, FastAPI serving and Docker packaging
+follow review of that checkpoint. MLflow and Databricks remain optional extensions.
