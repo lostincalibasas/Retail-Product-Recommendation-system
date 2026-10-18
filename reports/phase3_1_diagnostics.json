@@ -1,0 +1,1610 @@
+{
+  "all_saved_scores_reproduced_exactly": true,
+  "candidate_populations": {
+    "new": {
+      "mean_features": {
+        "brand_affinity_84d": 0.4951901174714357,
+        "category_affinity_84d": 0.057047183825667085,
+        "hh_products_84d": 83.78245232171453,
+        "hh_purchase_rows_28d": 37.08663796589237,
+        "hh_purchase_rows_7d": 9.249969141592778,
+        "hh_purchase_rows_84d": 110.41421673832038,
+        "hh_recency_days": 34.60061166765381,
+        "hh_spend_28d": 118.07790469664211,
+        "is_category_candidate": 0.43418613856718113,
+        "is_popular_candidate": 0.6390594422960881,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 579.3672330534959,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 39.74318834576139,
+        "product_households_28d": 78.6540901877468,
+        "product_households_7d": 24.202620067033955,
+        "product_households_84d": 166.7873873749989,
+        "product_mean_price_28d": 1.9364394485837477,
+        "product_purchase_rows_28d": 104.12806451813574,
+        "product_recency_days": 0.8774474318438463
+      },
+      "positive_rate": 0.0023648835582149993,
+      "positives": 7223,
+      "rows": 3054273
+    },
+    "repeat": {
+      "mean_features": {
+        "brand_affinity_84d": 0.5687875939841717,
+        "category_affinity_84d": 0.03275148790657804,
+        "hh_products_84d": 116.5552925800212,
+        "hh_purchase_rows_28d": 51.92624561945132,
+        "hh_purchase_rows_7d": 12.902424478779732,
+        "hh_purchase_rows_84d": 155.8942674015777,
+        "hh_recency_days": 18.98900863512524,
+        "hh_spend_28d": 163.22258026885177,
+        "is_category_candidate": 0.11144129444257253,
+        "is_popular_candidate": 0.30987135203614125,
+        "is_repeat_candidate": 0.7790802641300427,
+        "pair_mean_price_84d": 1.414859958814271,
+        "pair_purchase_rows_28d": 0.3917120885973302,
+        "pair_purchase_rows_7d": 0.11148787522606131,
+        "pair_purchase_rows_84d": 0.8557603938898253,
+        "pair_quantity_84d": 148.89378221341684,
+        "pair_recency_days": 120.67999885758078,
+        "pair_spend_84d": 2.767364353366652,
+        "price_to_household_mean": 50.48003749415699,
+        "product_households_28d": 51.41382742057721,
+        "product_households_7d": 16.417995890690882,
+        "product_households_84d": 110.28828472894914,
+        "product_mean_price_28d": 2.1088587974060564,
+        "product_purchase_rows_28d": 71.16370459351127,
+        "product_recency_days": 11.025260384879674
+      },
+      "positive_rate": 0.03254840746421355,
+      "positives": 95729,
+      "rows": 2941127
+    }
+  },
+  "created_utc": "2026-10-18T11:10:47.321351+00:00",
+  "data_manifest_sha256": "3d09e8064531ddea7b173dc278468e781d4b52f9a5a5ce18e5581c74f69ba925",
+  "diagnostic_source_sha256": "020dd6eaa24f5b048184b0c022e49a9bdd77674e67ec3219a07dce6157e9c025",
+  "elapsed_seconds": 28.93800000000192,
+  "example_selection": "lost-hit LambdaRank-rank quantiles 0/25/50/75/100%, nearest distinct household/cutoff",
+  "examples": [
+    {
+      "PRODUCT_ID": 1029743,
+      "cutoff_day": 589,
+      "features": {
+        "brand_affinity_84d": 0.0,
+        "category_affinity_84d": 0.0,
+        "hh_products_84d": 0.0,
+        "hh_purchase_rows_28d": 0.0,
+        "hh_purchase_rows_7d": 0.0,
+        "hh_purchase_rows_84d": 0.0,
+        "hh_recency_days": 364.0,
+        "hh_spend_28d": 0.0,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 590.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 0.0,
+        "product_households_28d": 357.0,
+        "product_households_7d": 172.0,
+        "product_households_84d": 588.0,
+        "product_mean_price_28d": 2.5284583568573,
+        "product_purchase_rows_28d": 639.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_features": {
+        "brand_affinity_84d": 0.0,
+        "category_affinity_84d": 0.0,
+        "hh_products_84d": 0.0,
+        "hh_purchase_rows_28d": 0.0,
+        "hh_purchase_rows_7d": 0.0,
+        "hh_purchase_rows_84d": 0.0,
+        "hh_recency_days": 364.0,
+        "hh_spend_28d": 0.0,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 1.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 421.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 0.0,
+        "product_households_28d": 199.0,
+        "product_households_7d": 74.0,
+        "product_households_84d": 540.0,
+        "product_mean_price_28d": 1.0907094478607178,
+        "product_purchase_rows_28d": 261.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_is_repeat": true,
+      "fifth_product_id": 981760,
+      "fifth_score": -0.8295762433336178,
+      "first_divergence_score_gap": {
+        "is_repeat_candidate": 0.24534441018701061,
+        "pair_recency_days": 0.011207037936751442,
+        "product_households_7d": 0.006072259052939916,
+        "product_mean_price_28d": 0.0032249569851044747,
+        "product_purchase_rows_28d": -0.25464059440791065
+      },
+      "household_key": 2150,
+      "lambdarank_new_only_rank": 4,
+      "lambdarank_rank": 6,
+      "lambdarank_score": -0.8407843130875137,
+      "lambdarank_top5": [
+        {
+          "PRODUCT_ID": 1106523,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.6854160486476243,
+          "popularity_score": 237.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.7525473100496123,
+          "popularity_score": 725.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.7598231160461986,
+          "popularity_score": 436.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.8205398652205477,
+          "popularity_score": 318.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 981760,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.8295762433336178,
+          "popularity_score": 199.0,
+          "relevance": 0,
+          "repeat_product": true
+        }
+      ],
+      "popularity_rank": 3,
+      "popularity_score": 357.0,
+      "popularity_top5": [
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.7525473100496123,
+          "popularity_score": 725.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.7598231160461986,
+          "popularity_score": 436.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.8407843130875137,
+          "popularity_score": 357.0,
+          "relevance": 1,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -0.8205398652205477,
+          "popularity_score": 318.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 923746,
+          "cutoff_day": 589,
+          "household_key": 2150,
+          "lambdarank_score": -1.7521968485089636,
+          "popularity_score": 259.0,
+          "relevance": 0,
+          "repeat_product": false
+        }
+      ],
+      "repeat_candidates_above": 2,
+      "score_gap_to_fifth": 0.011208069753895877
+    },
+    {
+      "PRODUCT_ID": 1029743,
+      "cutoff_day": 575,
+      "features": {
+        "brand_affinity_84d": 0.3658536672592163,
+        "category_affinity_84d": 0.04878048598766327,
+        "hh_products_84d": 40.0,
+        "hh_purchase_rows_28d": 26.0,
+        "hh_purchase_rows_7d": 0.0,
+        "hh_purchase_rows_84d": 41.0,
+        "hh_recency_days": 7.0,
+        "hh_spend_28d": 38.81999969482422,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 576.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 2.0143353939056396,
+        "product_households_28d": 299.0,
+        "product_households_7d": 120.0,
+        "product_households_84d": 569.0,
+        "product_mean_price_28d": 2.6065499782562256,
+        "product_purchase_rows_28d": 492.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_features": {
+        "brand_affinity_84d": 0.6341463327407837,
+        "category_affinity_84d": 0.09756097197532654,
+        "hh_products_84d": 40.0,
+        "hh_purchase_rows_28d": 26.0,
+        "hh_purchase_rows_7d": 0.0,
+        "hh_purchase_rows_84d": 41.0,
+        "hh_recency_days": 7.0,
+        "hh_spend_28d": 38.81999969482422,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 0.0,
+        "is_repeat_candidate": 1.0,
+        "pair_mean_price_84d": 0.9900000095367432,
+        "pair_purchase_rows_28d": 1.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 1.0,
+        "pair_quantity_84d": 2.0,
+        "pair_recency_days": 7.0,
+        "pair_spend_84d": 1.9800000190734863,
+        "price_to_household_mean": 0.7650695443153381,
+        "product_households_28d": 1.0,
+        "product_households_7d": 0.0,
+        "product_households_84d": 1.0,
+        "product_mean_price_28d": 0.9900000095367432,
+        "product_purchase_rows_28d": 1.0,
+        "product_recency_days": 7.0
+      },
+      "fifth_is_repeat": true,
+      "fifth_product_id": 649299,
+      "fifth_score": -0.5423292075472239,
+      "first_divergence_score_gap": {
+        "category_affinity_84d": 0.008182702241043038,
+        "pair_quantity_84d": 0.19288541855177724,
+        "pair_recency_days": 0.42483042906034696,
+        "product_households_7d": 0.1971167015023782,
+        "product_households_84d": -0.04585416888542256,
+        "product_purchase_rows_28d": 0.05201979947741429,
+        "product_recency_days": -0.0007819188668224035
+      },
+      "household_key": 1051,
+      "lambdarank_new_only_rank": 3,
+      "lambdarank_rank": 35,
+      "lambdarank_score": -1.3707281706279382,
+      "lambdarank_top5": [
+        {
+          "PRODUCT_ID": 815837,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": 0.39733849808368127,
+          "popularity_score": 1.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 440532,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -0.4976623794949031,
+          "popularity_score": 1.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 444016,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -0.4976623794949031,
+          "popularity_score": 1.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 712244,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -0.4976623794949031,
+          "popularity_score": 1.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 649299,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -0.5423292075472239,
+          "popularity_score": 1.0,
+          "relevance": 0,
+          "repeat_product": true
+        }
+      ],
+      "popularity_rank": 4,
+      "popularity_score": 299.0,
+      "popularity_top5": [
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -1.2015699734759222,
+          "popularity_score": 748.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -1.0271226697130635,
+          "popularity_score": 444.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -1.273406514971075,
+          "popularity_score": 391.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -1.3707281706279382,
+          "popularity_score": 299.0,
+          "relevance": 1,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 981760,
+          "cutoff_day": 575,
+          "household_key": 1051,
+          "lambdarank_score": -1.8177002327245355,
+          "popularity_score": 235.0,
+          "relevance": 0,
+          "repeat_product": false
+        }
+      ],
+      "repeat_candidates_above": 32,
+      "score_gap_to_fifth": 0.8283989630807143
+    },
+    {
+      "PRODUCT_ID": 995242,
+      "cutoff_day": 554,
+      "features": {
+        "brand_affinity_84d": 0.0845070406794548,
+        "category_affinity_84d": 0.0,
+        "hh_products_84d": 57.0,
+        "hh_purchase_rows_28d": 32.0,
+        "hh_purchase_rows_7d": 1.0,
+        "hh_purchase_rows_84d": 71.0,
+        "hh_recency_days": 5.0,
+        "hh_spend_28d": 97.69000244140625,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 555.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 0.47998756170272827,
+        "product_households_28d": 400.0,
+        "product_households_7d": 165.0,
+        "product_households_84d": 653.0,
+        "product_mean_price_28d": 1.14365816116333,
+        "product_purchase_rows_28d": 676.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_features": {
+        "brand_affinity_84d": 0.9154929518699646,
+        "category_affinity_84d": 0.1267605572938919,
+        "hh_products_84d": 57.0,
+        "hh_purchase_rows_28d": 32.0,
+        "hh_purchase_rows_7d": 1.0,
+        "hh_purchase_rows_84d": 71.0,
+        "hh_recency_days": 5.0,
+        "hh_spend_28d": 97.69000244140625,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 0.0,
+        "is_repeat_candidate": 1.0,
+        "pair_mean_price_84d": 3.3239998817443848,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 3.0,
+        "pair_quantity_84d": 5.0,
+        "pair_recency_days": 59.0,
+        "pair_spend_84d": 16.6200008392334,
+        "price_to_household_mean": 1.497711420059204,
+        "product_households_28d": 5.0,
+        "product_households_7d": 1.0,
+        "product_households_84d": 13.0,
+        "product_mean_price_28d": 3.5685713291168213,
+        "product_purchase_rows_28d": 6.0,
+        "product_recency_days": 2.0
+      },
+      "fifth_is_repeat": true,
+      "fifth_product_id": 1017799,
+      "fifth_score": 0.808208638843769,
+      "first_divergence_score_gap": {
+        "brand_affinity_84d": 0.00729779905912294,
+        "category_affinity_84d": -0.03270241963841378,
+        "pair_mean_price_84d": 0.020970996818251396,
+        "pair_purchase_rows_84d": 1.3359190692155296,
+        "pair_quantity_84d": 0.7581931388629929,
+        "pair_recency_days": 0.12605180222237952,
+        "pair_spend_84d": 0.18955445461929515,
+        "product_households_7d": 0.002016941721664965,
+        "product_mean_price_28d": 0.00988621659498313,
+        "product_recency_days": 0.002129186070840575
+      },
+      "household_key": 1499,
+      "lambdarank_new_only_rank": 2,
+      "lambdarank_rank": 62,
+      "lambdarank_score": -1.6111085467028763,
+      "lambdarank_top5": [
+        {
+          "PRODUCT_ID": 13417139,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 2.0512637621038423,
+          "popularity_score": 6.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 1.2805069222368775,
+          "popularity_score": 730.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1088147,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 1.1263508981798078,
+          "popularity_score": 14.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 944486,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 0.9056817930127984,
+          "popularity_score": 18.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1017799,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 0.808208638843769,
+          "popularity_score": 5.0,
+          "relevance": 0,
+          "repeat_product": true
+        }
+      ],
+      "popularity_rank": 3,
+      "popularity_score": 400.0,
+      "popularity_top5": [
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": 1.2805069222368775,
+          "popularity_score": 730.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": -1.325510928154325,
+          "popularity_score": 444.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": -1.6111085467028763,
+          "popularity_score": 400.0,
+          "relevance": 1,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": -1.7355988607977655,
+          "popularity_score": 302.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 923746,
+          "cutoff_day": 554,
+          "household_key": 1499,
+          "lambdarank_score": -2.7423599473198714,
+          "popularity_score": 255.0,
+          "relevance": 0,
+          "repeat_product": false
+        }
+      ],
+      "repeat_candidates_above": 60,
+      "score_gap_to_fifth": 2.419317185546645
+    },
+    {
+      "PRODUCT_ID": 1082185,
+      "cutoff_day": 561,
+      "features": {
+        "brand_affinity_84d": 0.658823549747467,
+        "category_affinity_84d": 0.0,
+        "hh_products_84d": 129.0,
+        "hh_purchase_rows_28d": 61.0,
+        "hh_purchase_rows_7d": 36.0,
+        "hh_purchase_rows_84d": 170.0,
+        "hh_recency_days": 0.0,
+        "hh_spend_28d": 165.47000122070312,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 562.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 56.254337310791016,
+        "product_households_28d": 735.0,
+        "product_households_7d": 323.0,
+        "product_households_84d": 1150.0,
+        "product_mean_price_28d": 0.8860084414482117,
+        "product_purchase_rows_28d": 1361.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_features": {
+        "brand_affinity_84d": 0.658823549747467,
+        "category_affinity_84d": 0.0235294122248888,
+        "hh_products_84d": 129.0,
+        "hh_purchase_rows_28d": 61.0,
+        "hh_purchase_rows_7d": 36.0,
+        "hh_purchase_rows_84d": 170.0,
+        "hh_recency_days": 0.0,
+        "hh_spend_28d": 165.47000122070312,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 0.0,
+        "is_repeat_candidate": 1.0,
+        "pair_mean_price_84d": 1.9900000095367432,
+        "pair_purchase_rows_28d": 1.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 4.0,
+        "pair_quantity_84d": 4.0,
+        "pair_recency_days": 9.0,
+        "pair_spend_84d": 7.960000038146973,
+        "price_to_household_mean": 126.34882354736328,
+        "product_households_28d": 2.0,
+        "product_households_7d": 1.0,
+        "product_households_84d": 11.0,
+        "product_mean_price_28d": 1.9900000095367432,
+        "product_purchase_rows_28d": 2.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_is_repeat": true,
+      "fifth_product_id": 907957,
+      "fifth_score": 0.5055445527447321,
+      "first_divergence_score_gap": {
+        "category_affinity_84d": -0.08318940800302208,
+        "pair_purchase_rows_84d": 1.4595733961205888,
+        "pair_quantity_84d": 0.7790550380113713,
+        "pair_recency_days": 0.1032057250839059,
+        "pair_spend_84d": 0.01634420163927058,
+        "product_households_7d": -0.02065169515586649
+      },
+      "household_key": 184,
+      "lambdarank_new_only_rank": 1,
+      "lambdarank_rank": 89,
+      "lambdarank_score": -1.7487927049515166,
+      "lambdarank_top5": [
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 2.22224089797148,
+          "popularity_score": 438.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 824005,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 1.082745298540708,
+          "popularity_score": 59.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1056746,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 0.99111413949566,
+          "popularity_score": 26.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 5572234,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 0.8039607545822042,
+          "popularity_score": 9.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 907957,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 0.5055445527447321,
+          "popularity_score": 2.0,
+          "relevance": 1,
+          "repeat_product": true
+        }
+      ],
+      "popularity_rank": 1,
+      "popularity_score": 735.0,
+      "popularity_top5": [
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": -1.7487927049515166,
+          "popularity_score": 735.0,
+          "relevance": 1,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": 2.22224089797148,
+          "popularity_score": 438.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": -1.9021046751647024,
+          "popularity_score": 387.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": -1.979896702206876,
+          "popularity_score": 281.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 981760,
+          "cutoff_day": 561,
+          "household_key": 184,
+          "lambdarank_score": -1.0360071771141264,
+          "popularity_score": 254.0,
+          "relevance": 0,
+          "repeat_product": true
+        }
+      ],
+      "repeat_candidates_above": 88,
+      "score_gap_to_fifth": 2.254337257696249
+    },
+    {
+      "PRODUCT_ID": 923746,
+      "cutoff_day": 554,
+      "features": {
+        "brand_affinity_84d": 0.45803698897361755,
+        "category_affinity_84d": 0.00711237546056509,
+        "hh_products_84d": 482.0,
+        "hh_purchase_rows_28d": 176.0,
+        "hh_purchase_rows_7d": 32.0,
+        "hh_purchase_rows_84d": 703.0,
+        "hh_recency_days": 3.0,
+        "hh_spend_28d": 479.5400085449219,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 1.0,
+        "is_repeat_candidate": 0.0,
+        "pair_mean_price_84d": 0.0,
+        "pair_purchase_rows_28d": 0.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 0.0,
+        "pair_quantity_84d": 0.0,
+        "pair_recency_days": 555.0,
+        "pair_spend_84d": 0.0,
+        "price_to_household_mean": 0.5205857157707214,
+        "product_households_28d": 255.0,
+        "product_households_7d": 24.0,
+        "product_households_84d": 346.0,
+        "product_mean_price_28d": 1.1720266342163086,
+        "product_purchase_rows_28d": 307.0,
+        "product_recency_days": 0.0
+      },
+      "fifth_features": {
+        "brand_affinity_84d": 0.45803698897361755,
+        "category_affinity_84d": 0.01422475092113018,
+        "hh_products_84d": 482.0,
+        "hh_purchase_rows_28d": 176.0,
+        "hh_purchase_rows_7d": 32.0,
+        "hh_purchase_rows_84d": 703.0,
+        "hh_recency_days": 3.0,
+        "hh_spend_28d": 479.5400085449219,
+        "is_category_candidate": 0.0,
+        "is_popular_candidate": 0.0,
+        "is_repeat_candidate": 1.0,
+        "pair_mean_price_84d": 1.6139999628067017,
+        "pair_purchase_rows_28d": 3.0,
+        "pair_purchase_rows_7d": 0.0,
+        "pair_purchase_rows_84d": 5.0,
+        "pair_quantity_84d": 5.0,
+        "pair_recency_days": 10.0,
+        "pair_spend_84d": 8.069999694824219,
+        "price_to_household_mean": 0.7467703223228455,
+        "product_households_28d": 6.0,
+        "product_households_7d": 0.0,
+        "product_households_84d": 14.0,
+        "product_mean_price_28d": 1.681249976158142,
+        "product_purchase_rows_28d": 8.0,
+        "product_recency_days": 7.0
+      },
+      "fifth_is_repeat": true,
+      "fifth_product_id": 941943,
+      "fifth_score": 0.5417223470659797,
+      "first_divergence_score_gap": {
+        "pair_purchase_rows_28d": 0.23750424964937672,
+        "pair_purchase_rows_84d": 2.059151385616103,
+        "pair_quantity_84d": 0.9641254498016526,
+        "pair_recency_days": 0.13807005049280366,
+        "pair_spend_84d": 0.022466801764020994,
+        "product_households_7d": -0.02211215391952502,
+        "product_households_84d": -0.0006758629560163877
+      },
+      "household_key": 2296,
+      "lambdarank_new_only_rank": 23,
+      "lambdarank_rank": 161,
+      "lambdarank_score": -2.8568075733824374,
+      "lambdarank_top5": [
+        {
+          "PRODUCT_ID": 1070015,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 3.259533997691912,
+          "popularity_score": 45.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 2.0834721633357,
+          "popularity_score": 302.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 883404,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 1.2244451028137455,
+          "popularity_score": 197.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 913210,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 0.5832208508233957,
+          "popularity_score": 60.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 941943,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 0.5417223470659797,
+          "popularity_score": 6.0,
+          "relevance": 1,
+          "repeat_product": true
+        }
+      ],
+      "popularity_rank": 5,
+      "popularity_score": 255.0,
+      "popularity_top5": [
+        {
+          "PRODUCT_ID": 1082185,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": -0.7573154787317066,
+          "popularity_score": 730.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 6534178,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": -1.812977725346161,
+          "popularity_score": 444.0,
+          "relevance": 0,
+          "repeat_product": false
+        },
+        {
+          "PRODUCT_ID": 995242,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 0.32823811982988016,
+          "popularity_score": 400.0,
+          "relevance": 0,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 1029743,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": 2.0834721633357,
+          "popularity_score": 302.0,
+          "relevance": 1,
+          "repeat_product": true
+        },
+        {
+          "PRODUCT_ID": 923746,
+          "cutoff_day": 554,
+          "household_key": 2296,
+          "lambdarank_score": -2.8568075733824374,
+          "popularity_score": 255.0,
+          "relevance": 1,
+          "repeat_product": false
+        }
+      ],
+      "repeat_candidates_above": 138,
+      "score_gap_to_fifth": 3.398529920448417
+    }
+  ],
+  "feature_order": [
+    "hh_purchase_rows_7d",
+    "hh_purchase_rows_28d",
+    "hh_purchase_rows_84d",
+    "hh_spend_28d",
+    "hh_products_84d",
+    "hh_recency_days",
+    "product_households_7d",
+    "product_households_28d",
+    "product_households_84d",
+    "product_purchase_rows_28d",
+    "product_mean_price_28d",
+    "product_recency_days",
+    "pair_purchase_rows_7d",
+    "pair_purchase_rows_28d",
+    "pair_purchase_rows_84d",
+    "pair_quantity_84d",
+    "pair_spend_84d",
+    "pair_recency_days",
+    "pair_mean_price_84d",
+    "category_affinity_84d",
+    "brand_affinity_84d",
+    "price_to_household_mean",
+    "is_repeat_candidate",
+    "is_category_candidate",
+    "is_popular_candidate"
+  ],
+  "git_base_commit": "1bdaf623544101d2fcf048180d3cc6927fbe063d",
+  "importance": [
+    {
+      "feature": "pair_purchase_rows_84d",
+      "gain": 881017.6518344879,
+      "gain_share": 0.515563051118943,
+      "split_count": 400
+    },
+    {
+      "feature": "pair_quantity_84d",
+      "gain": 279755.75715351105,
+      "gain_share": 0.16371037677375647,
+      "split_count": 168
+    },
+    {
+      "feature": "pair_recency_days",
+      "gain": 139299.13210201263,
+      "gain_share": 0.081516511519597,
+      "split_count": 468
+    },
+    {
+      "feature": "hh_purchase_rows_84d",
+      "gain": 129277.35863637924,
+      "gain_share": 0.0756518661350168,
+      "split_count": 549
+    },
+    {
+      "feature": "product_households_7d",
+      "gain": 99007.18314790726,
+      "gain_share": 0.05793805075317209,
+      "split_count": 508
+    },
+    {
+      "feature": "product_purchase_rows_28d",
+      "gain": 80617.08883285522,
+      "gain_share": 0.04717634454252906,
+      "split_count": 217
+    },
+    {
+      "feature": "pair_purchase_rows_28d",
+      "gain": 21127.964904785156,
+      "gain_share": 0.012363881731045447,
+      "split_count": 155
+    },
+    {
+      "feature": "category_affinity_84d",
+      "gain": 13646.588316440582,
+      "gain_share": 0.007985852150792071,
+      "split_count": 252
+    },
+    {
+      "feature": "is_repeat_candidate",
+      "gain": 12246.317598342896,
+      "gain_share": 0.00716642720248175,
+      "split_count": 37
+    },
+    {
+      "feature": "pair_spend_84d",
+      "gain": 7853.206490039825,
+      "gain_share": 0.004595620860310127,
+      "split_count": 146
+    },
+    {
+      "feature": "hh_purchase_rows_28d",
+      "gain": 7614.230068206787,
+      "gain_share": 0.004455774158113887,
+      "split_count": 164
+    },
+    {
+      "feature": "product_mean_price_28d",
+      "gain": 6015.591134548187,
+      "gain_share": 0.0035202660391126578,
+      "split_count": 222
+    },
+    {
+      "feature": "product_households_84d",
+      "gain": 5794.9611139297485,
+      "gain_share": 0.003391155474345169,
+      "split_count": 255
+    },
+    {
+      "feature": "hh_spend_28d",
+      "gain": 5692.124268531799,
+      "gain_share": 0.0033309763420991626,
+      "split_count": 148
+    },
+    {
+      "feature": "product_recency_days",
+      "gain": 5016.003237247467,
+      "gain_share": 0.0029353168214427895,
+      "split_count": 134
+    },
+    {
+      "feature": "brand_affinity_84d",
+      "gain": 2553.5449180603027,
+      "gain_share": 0.0014943099112522291,
+      "split_count": 148
+    },
+    {
+      "feature": "price_to_household_mean",
+      "gain": 2356.1303844451904,
+      "gain_share": 0.0013787848260579643,
+      "split_count": 73
+    },
+    {
+      "feature": "hh_purchase_rows_7d",
+      "gain": 2243.9985251426697,
+      "gain_share": 0.001313166341128325,
+      "split_count": 125
+    },
+    {
+      "feature": "hh_products_84d",
+      "gain": 1904.114155292511,
+      "gain_share": 0.001114269278870023,
+      "split_count": 70
+    },
+    {
+      "feature": "hh_recency_days",
+      "gain": 1887.3866066932678,
+      "gain_share": 0.0011044804784122696,
+      "split_count": 89
+    },
+    {
+      "feature": "product_households_28d",
+      "gain": 1789.203863143921,
+      "gain_share": 0.0010470248817779362,
+      "split_count": 99
+    },
+    {
+      "feature": "pair_mean_price_84d",
+      "gain": 1322.1138501167297,
+      "gain_share": 0.0007736883013336591,
+      "split_count": 69
+    },
+    {
+      "feature": "pair_purchase_rows_7d",
+      "gain": 756.599946975708,
+      "gain_share": 0.0004427550076062583,
+      "split_count": 61
+    },
+    {
+      "feature": "is_category_candidate",
+      "gain": 51.349700927734375,
+      "gain_share": 3.004935080383779e-05,
+      "split_count": 3
+    },
+    {
+      "feature": "is_popular_candidate",
+      "gain": 0.0,
+      "gain_share": 0.0,
+      "split_count": 0
+    }
+  ],
+  "limitations": [
+    "Gain/split importance describes training trees, not causal effects or held-out permutation importance.",
+    "Pooled ranker scores are not calibrated probabilities or comparable household utility scales; within-query comparisons also reported.",
+    "New-only ranking is a conditional diagnostic, not a proposed production policy or a separately trained model.",
+    "Validation was used for early stopping; segment findings require future independent validation after policy selection."
+  ],
+  "lost_gap_decomposition": {
+    "all_case_gaps_match_saved_scores": true,
+    "first_divergence_tree_counts": {
+      "brand_affinity_84d": 215,
+      "category_affinity_84d": 1568,
+      "is_category_candidate": 3,
+      "is_repeat_candidate": 162,
+      "pair_mean_price_84d": 556,
+      "pair_purchase_rows_28d": 1664,
+      "pair_purchase_rows_7d": 10,
+      "pair_purchase_rows_84d": 5518,
+      "pair_quantity_84d": 3112,
+      "pair_recency_days": 19719,
+      "pair_spend_84d": 2221,
+      "price_to_household_mean": 12,
+      "product_households_28d": 26,
+      "product_households_7d": 2757,
+      "product_households_84d": 779,
+      "product_mean_price_28d": 289,
+      "product_purchase_rows_28d": 728,
+      "product_recency_days": 309
+    },
+    "interpretation": "Exact partition by first divergent tree split, including all downstream interactions; NOT causal or additive feature importance.",
+    "signed_gap_by_first_divergence_feature": {
+      "brand_affinity_84d": 1.4066415475405347,
+      "category_affinity_84d": -0.7669805072694962,
+      "is_category_candidate": -0.04555913532265145,
+      "is_repeat_candidate": 5.585548023741487,
+      "pair_mean_price_84d": 1.8661171746957068,
+      "pair_purchase_rows_28d": 11.75300101704319,
+      "pair_purchase_rows_7d": -0.026794503514883022,
+      "pair_purchase_rows_84d": 237.44806806108375,
+      "pair_quantity_84d": 119.31728492509627,
+      "pair_recency_days": 160.44533105798038,
+      "pair_spend_84d": 9.788323060034779,
+      "price_to_household_mean": 0.0,
+      "product_households_28d": 0.26030202628149285,
+      "product_households_7d": 6.664964681841395,
+      "product_households_84d": 4.580888074046591,
+      "product_mean_price_28d": 0.32914468449451656,
+      "product_purchase_rows_28d": 13.64921465763084,
+      "product_recency_days": -0.13884082105846088
+    },
+    "total_score_gap": 572.1166540243455
+  },
+  "model_manifest_sha256": "bffcdc98f92b49c2c5b12f8d485daa5e99b3aa754a540638116640178d852058",
+  "model_sha256": "af9492f58af0b891b6f766213a5eb823bbb7fbf46aeb1719aba6c406515219ec",
+  "new_hit_transition": {
+    "baseline": 332,
+    "gained": 0,
+    "lambdarank": 11,
+    "lost": 321,
+    "lost_at_equal_fifth_score": 0,
+    "lost_but_new_only_rank_le5": 302,
+    "lost_rank_distribution": {
+      "count": 321,
+      "max": 161.0,
+      "mean": 62.96261682242991,
+      "median": 62.0,
+      "min": 6.0,
+      "p01": 7.2,
+      "p05": 11.0,
+      "p25": 35.0,
+      "p75": 89.0,
+      "p95": 118.0,
+      "p99": 139.0000000000001,
+      "std": 33.944225436799485
+    },
+    "lost_repeat_candidates_above": {
+      "count": 321,
+      "max": 142.0,
+      "mean": 60.429906542056074,
+      "median": 60.0,
+      "min": 2.0,
+      "p01": 5.0,
+      "p05": 9.0,
+      "p25": 33.0,
+      "p75": 86.0,
+      "p95": 114.0,
+      "p99": 128.0,
+      "std": 33.123984632516525
+    },
+    "lost_score_gap_to_fifth": {
+      "count": 321,
+      "max": 4.857381138944554,
+      "mean": 1.782294872349986,
+      "median": 1.7346401636192414,
+      "min": 0.011208069753895877,
+      "p01": 0.0698129109743496,
+      "p05": 0.41134778768725627,
+      "p25": 1.0198519367682315,
+      "p75": 2.3957235685500713,
+      "p95": 3.398529920448417,
+      "p99": 4.0371351387039125,
+      "std": 0.9333536592773457
+    },
+    "lost_with_repeat_at_fifth": 318,
+    "shared": 11
+  },
+  "new_positive_ranks": {
+    "lambdarank": {
+      "new_only_top5_hits": 910,
+      "overall": {
+        "count": 7223,
+        "max": 200.0,
+        "mean": 131.64682264986848,
+        "median": 134.0,
+        "min": 1.0,
+        "p01": 18.0,
+        "p05": 58.0,
+        "p25": 111.0,
+        "p75": 158.0,
+        "p95": 189.0,
+        "p99": 197.0,
+        "std": 37.72588903011107
+      },
+      "within_new_only": {
+        "count": 7223,
+        "max": 169.0,
+        "mean": 33.89782638792745,
+        "median": 28.0,
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 2.0,
+        "p25": 12.0,
+        "p75": 51.0,
+        "p95": 84.0,
+        "p99": 106.0,
+        "std": 26.533093799544453
+      }
+    },
+    "popularity": {
+      "new_only_top5_hits": 898,
+      "overall": {
+        "count": 7223,
+        "max": 194.0,
+        "mean": 59.36508376021044,
+        "median": 52.0,
+        "min": 1.0,
+        "p01": 2.0,
+        "p05": 6.0,
+        "p25": 25.0,
+        "p75": 87.0,
+        "p95": 136.0,
+        "p99": 157.0,
+        "std": 40.81544262137598
+      },
+      "within_new_only": {
+        "count": 7223,
+        "max": 185.0,
+        "mean": 34.89658036826803,
+        "median": 29.0,
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 2.0,
+        "p25": 12.0,
+        "p75": 53.0,
+        "p95": 85.0,
+        "p99": 107.0,
+        "std": 27.080631791711948
+      }
+    }
+  },
+  "root_split_counts": {
+    "pair_purchase_rows_28d": 39,
+    "pair_purchase_rows_7d": 7,
+    "pair_purchase_rows_84d": 63,
+    "pair_quantity_84d": 21,
+    "pair_recency_days": 7,
+    "pair_spend_84d": 15
+  },
+  "scope": "saved model and validation only; no fitting, model edits or candidate changes",
+  "score_distributions": {
+    "lambdarank": {
+      "new": {
+        "count": 3054273,
+        "max": -0.419234727078549,
+        "mean": -2.6646311557696367,
+        "median": -2.6955173875899656,
+        "min": -4.253712491541225,
+        "p01": -3.793661158184708,
+        "p05": -3.659793084412104,
+        "p25": -3.175813786494768,
+        "p75": -2.1983574347152093,
+        "p95": -1.5251183627930047,
+        "p99": -1.0364922090737314,
+        "std": 0.6576250235397122
+      },
+      "purchased_new": {
+        "count": 7223,
+        "max": -0.5462895563889623,
+        "mean": -2.602961866604144,
+        "median": -2.6268432095415846,
+        "min": -3.91421710202302,
+        "p01": -3.737808631417614,
+        "p05": -3.582978116120001,
+        "p25": -3.0077550010689977,
+        "p75": -2.243504166576291,
+        "p95": -1.503477511962175,
+        "p99": -0.8803141893769646,
+        "std": 0.6121780836180075
+      },
+      "purchased_repeat": {
+        "count": 95729,
+        "max": 4.651721909494781,
+        "mean": -0.17080226600802484,
+        "median": -0.44899225308517215,
+        "min": -3.8370467009545686,
+        "p01": -2.454550565766562,
+        "p05": -1.8969082447261247,
+        "p25": -1.289954216334474,
+        "p75": 0.7447617476223254,
+        "p95": 2.445685701900925,
+        "p99": 3.3753495956179767,
+        "std": 1.3761386664477349
+      },
+      "repeat": {
+        "count": 2941127,
+        "max": 4.651721909494781,
+        "mean": -1.2885210592754959,
+        "median": -1.4110896584411807,
+        "min": -4.254029998511294,
+        "p01": -3.187633949179599,
+        "p05": -2.680092434160721,
+        "p25": -1.7898720987557988,
+        "p75": -0.858456466865954,
+        "p95": 0.3013789854814674,
+        "p99": 1.517624847971176,
+        "std": 0.8766868005488351
+      },
+      "unpurchased_new": {
+        "count": 3047050,
+        "max": -0.419234727078549,
+        "mean": -2.6647773421714516,
+        "median": -2.695796331817916,
+        "min": -4.253712491541225,
+        "p01": -3.793787904753645,
+        "p05": -3.660037224764606,
+        "p25": -3.176226662331419,
+        "p75": -2.1982177072287223,
+        "p95": -1.5251183627930047,
+        "p99": -1.0364922090737314,
+        "std": 0.6577221547042134
+      },
+      "unpurchased_repeat": {
+        "count": 2845398,
+        "max": 4.574208384325314,
+        "mean": -1.3261249735119935,
+        "median": -1.4259308879992973,
+        "min": -4.254029998511294,
+        "p01": -3.1991060061382486,
+        "p05": -2.6921473376011877,
+        "p25": -1.800018407068518,
+        "p75": -0.8951599273995884,
+        "p95": 0.15274223227549324,
+        "p99": 1.1613295196921578,
+        "std": 0.829023658596021
+      }
+    },
+    "popularity": {
+      "new": {
+        "count": 3054273,
+        "max": 753.0,
+        "mean": 78.6540901877468,
+        "median": 70.0,
+        "min": 0.0,
+        "p01": 2.0,
+        "p05": 8.0,
+        "p25": 23.0,
+        "p75": 104.0,
+        "p95": 197.0,
+        "p99": 387.0,
+        "std": 73.68528046372758
+      },
+      "purchased_new": {
+        "count": 7223,
+        "max": 753.0,
+        "mean": 110.29378374636578,
+        "median": 90.0,
+        "min": 1.0,
+        "p01": 8.0,
+        "p05": 15.0,
+        "p25": 53.0,
+        "p75": 142.0,
+        "p95": 251.89999999999964,
+        "p99": 468.0,
+        "std": 97.31916217214452
+      },
+      "purchased_repeat": {
+        "count": 95729,
+        "max": 753.0,
+        "mean": 97.23649050966792,
+        "median": 26.0,
+        "min": 0.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 7.0,
+        "p75": 119.0,
+        "p95": 440.0,
+        "p99": 735.0,
+        "std": 159.14509869508728
+      },
+      "repeat": {
+        "count": 2941127,
+        "max": 753.0,
+        "mean": 51.41382742057721,
+        "median": 13.0,
+        "min": 0.0,
+        "p01": 0.0,
+        "p05": 0.0,
+        "p25": 3.0,
+        "p75": 68.0,
+        "p95": 201.0,
+        "p99": 444.0,
+        "std": 94.077553760209
+      },
+      "unpurchased_new": {
+        "count": 3047050,
+        "max": 753.0,
+        "mean": 78.57908862670452,
+        "median": 70.0,
+        "min": 0.0,
+        "p01": 2.0,
+        "p05": 8.0,
+        "p25": 23.0,
+        "p75": 104.0,
+        "p95": 197.0,
+        "p99": 387.0,
+        "std": 73.60408667337335
+      },
+      "unpurchased_repeat": {
+        "count": 2845398,
+        "max": 753.0,
+        "mean": 49.872195032118526,
+        "median": 13.0,
+        "min": 0.0,
+        "p01": 0.0,
+        "p05": 0.0,
+        "p25": 3.0,
+        "p75": 66.0,
+        "p95": 195.0,
+        "p99": 438.0,
+        "std": 90.6820762277882
+      }
+    }
+  },
+  "status": "complete",
+  "test_status": "sealed; no test targets or raw transactions accessed",
+  "top5_exposure": {
+    "lambdarank": {
+      "group_exposure_rate": 0.05901190913033325,
+      "groups": 29977,
+      "groups_with_new": 1769,
+      "new_count_histogram": {
+        "0": 28208,
+        "1": 505,
+        "2": 417,
+        "3": 339,
+        "4": 245,
+        "5": 263
+      },
+      "new_hits": 11,
+      "new_purchase_groups": {
+        "groups": 15095,
+        "groups_with_new": 140,
+        "new_slot_share": 0.004398807552169592,
+        "new_slots": 332
+      },
+      "new_slot_hit_rate": 0.0023650827778972264,
+      "new_slot_share": 0.031030456683457316,
+      "new_slots": 4651,
+      "purchase_groups": {
+        "groups": 16197,
+        "groups_with_new": 161,
+        "new_slot_share": 0.004556399333209854,
+        "new_slots": 369
+      },
+      "slots": 149885
+    },
+    "popularity": {
+      "group_exposure_rate": 0.8759048603929679,
+      "groups": 29977,
+      "groups_with_new": 26257,
+      "new_count_histogram": {
+        "0": 3720,
+        "1": 6568,
+        "2": 7609,
+        "3": 6208,
+        "4": 3993,
+        "5": 1879
+      },
+      "new_hits": 332,
+      "new_purchase_groups": {
+        "groups": 15095,
+        "groups_with_new": 12567,
+        "new_slot_share": 0.36610798277575357,
+        "new_slots": 27632
+      },
+      "new_slot_hit_rate": 0.005047356978883196,
+      "new_slot_share": 0.4388497848350402,
+      "new_slots": 65777,
+      "purchase_groups": {
+        "groups": 16197,
+        "groups_with_new": 13500,
+        "new_slot_share": 0.3681669444958943,
+        "new_slots": 29816
+      },
+      "slots": 149885
+    }
+  },
+  "tree_structure_interactions": {
+    "category_splits_below_pair_history": 252,
+    "household_splits_below_pair_history": 1145
+  },
+  "trees": 152,
+  "validation_groups": 29977,
+  "validation_rows": 5995400,
+  "verified_validation_shard_hashes": 36,
+  "within_group_ordering": {
+    "lambdarank": {
+      "best_new_minus_fifth_score": {
+        "count": 29977,
+        "max": 0.4103088500328444,
+        "mean": -1.7317442356194572,
+        "median": -1.7168177357308232,
+        "min": -6.00481424461268,
+        "p01": -4.234125504633707,
+        "p05": -3.5424783685069454,
+        "p25": -2.540763929577049,
+        "p75": -0.8661754061547211,
+        "p95": 0.0,
+        "p99": 0.24768572496694363,
+        "std": 1.094040127523196
+      },
+      "mean_repeat_minus_mean_new": {
+        "count": 29977,
+        "max": 3.1479116675614125,
+        "mean": 1.41460560448722,
+        "median": 1.5912107451166255,
+        "min": -1.2411685600979359,
+        "p01": -0.49596500539470745,
+        "p05": 0.12052941458883469,
+        "p25": 1.262462899967915,
+        "p75": 1.7720720666670715,
+        "p95": 2.002733951860009,
+        "p99": 2.2066119965726263,
+        "std": 0.5714445104089476
+      },
+      "prob_repeat_above_new_half_ties": 0.9108013593380281,
+      "repeat_new_pairs": 281246601,
+      "repeat_strictly_above_new": 256158146,
+      "tied_pairs": 3281
+    },
+    "popularity": {
+      "best_new_minus_fifth_score": {
+        "count": 29977,
+        "max": 513.0,
+        "mean": 175.4993828601928,
+        "median": 157.0,
+        "min": -189.0,
+        "p01": -106.0,
+        "p05": -45.0,
+        "p25": 75.0,
+        "p75": 189.0,
+        "p95": 481.0,
+        "p99": 513.0,
+        "std": 163.71737598273359
+      },
+      "mean_repeat_minus_mean_new": {
+        "count": 29977,
+        "max": 364.52764892578125,
+        "mean": -28.547130098605994,
+        "median": -26.37664794921875,
+        "min": -119.125,
+        "p01": -88.79467041015624,
+        "p05": -71.710546875,
+        "p25": -43.41796875,
+        "p75": -11.635860443115234,
+        "p95": 5.524520111083971,
+        "p99": 16.334583435058587,
+        "std": 24.534267656089494
+      },
+      "prob_repeat_above_new_half_ties": 0.27196086895997723,
+      "repeat_new_pairs": 281246601,
+      "repeat_strictly_above_new": 75469216,
+      "tied_pairs": 2037708
+    }
+  }
+}

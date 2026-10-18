@@ -34,6 +34,20 @@ products: new-to-household hits fell from 332 to 11. See the
 [verification, limitations and handover](reports/phase3_checkpoint.md).
 Validation selected the boosting iteration; the held-out test remains sealed.
 
+Phase 3.1 [model diagnostics](reports/phase3_1_diagnostics.md) explain the discovery
+regression using the saved model and validation data. New products occupy 3.10%
+of LambdaRank's Top 5 slots versus 43.88% for popularity; 302 of 321 lost new hits
+still rank in its top five among new candidates alone. The diagnostic command
+below verifies and scores the existing model without training or changing it:
+
+```powershell
+.\.venv-phase2\python.exe scripts/diagnose_ranker.py
+```
+
+Outputs go to `artifacts/diagnostics/lambdarank-v1/`; existing output directories
+cannot be overwritten. See the report for feature importance, score distributions,
+representative purchases, tests and the proposed next experiment awaiting approval.
+
 ## Phase 2 data checkpoint
 
 Use the isolated Python 3.12 environment (`.venv-phase2/python.exe` on this Windows
@@ -138,7 +152,8 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 ## Current scope boundary
 
-Phase 3 baseline/LambdaRank training and validation are authorized with fixed
-candidates. Work stops after their comparison for review. Held-out test evaluation,
-SHAP integration, FastAPI serving and Docker packaging remain future checkpoints.
+Phase 3 training/validation and Phase 3.1 saved-model diagnostics are complete with
+fixed candidates. Work stops for review before testing a discovery-aware alternative.
+Held-out test evaluation, SHAP integration, FastAPI serving and Docker packaging
+remain future checkpoints.
 MLflow and Databricks remain optional extensions.
