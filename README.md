@@ -30,8 +30,59 @@ be overwritten. To independently verify the saved evaluation:
 ```
 
 The test period is now consumed for final evaluation. It must not become tuning
-data while retaining a claim of untouched test performance. Production integration
-awaits approval.
+data while retaining a claim of untouched test performance.
+
+## Historical FastAPI demo
+
+The API serves the original frozen Strategy A Top 5 from the **day 701 historical
+snapshot**, predicting the next seven days. It loads the 152-tree model once at
+startup and scores each requested household's 200 saved candidates. No target
+labels or saved predictions enter serving. This is a historical portfolio demo,
+not a live retail catalog; scores are ranking scores, not purchase probabilities.
+The original policy favors repeats but does not require all five to be repeats.
+
+The existing Python 3.12 environment already contains the API dependencies,
+recorded in `requirements-phase2.lock.txt`. The `api` project extra also declares
+the minimal serving dependencies. From the repository root:
+
+```powershell
+.\.venv-phase2\python.exe -m uvicorn retail_recs.api:create_app --factory --app-dir src --host 127.0.0.1 --port 8000
+```
+
+Open `http://127.0.0.1:8000/docs`, or request:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+Invoke-RestMethod http://127.0.0.1:8000/recommendations/1
+```
+
+`/health` reports readiness, model version, snapshot cutoff, household count and
+candidate-row count after successful startup. `/recommendations/{household_id}`
+returns the household ID, `snapshot_cutoff`, `model_version`, and five
+`recommendations`, each with `product_id` and `score`. Equal scores use ascending
+product IDs. Unknown households return 404; invalid or nonpositive IDs return 422.
+
+Startup verifies model/schema/snapshot checksums, explicit feature order, finite
+float32 features, candidate uniqueness/counts, and the snapshot's recorded
+point-in-time verification. Labels stored alongside features are excluded by
+Parquet column projection; target files are never opened. Missing or inconsistent
+artifacts prevent startup. Required local artifacts are ignored by Git:
+
+- `artifacts/models/lambdarank-v1/`: model, manifest and feature schema.
+- `artifacts/data/retail-ranking-test-v1/`: manifest and cutoff-701 rows snapshot.
+
+Run focused tests with:
+
+```powershell
+.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_api.py
+```
+
+These integration tests require the local artifacts and additionally use frozen
+Phase 4 predictions to verify every cutoff-701 model score and representative
+API Top 5 responses. They skip when the model/data artifacts are absent. See
+[the repeat-purchase diagnostic](reports/phase4_repeat_diagnostic.md) for the
+post-hoc household-frequency comparison and [API checkpoint](reports/phase5_api_checkpoint.md)
+for execution evidence. No Docker packaging is included.
 
 ## Phase 3 model training and validation
 
@@ -196,8 +247,8 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 ## Current scope boundary
 
-Phase 4 final held-out evaluation is complete. Strategy A was approved before
-test access and remains unchanged; the discovery rule was not promoted. Work
-stops for approval before production integration. SHAP, FastAPI and Docker remain
-future checkpoints. Test results must not be used for model selection or tuning.
+Phase 4 final held-out evaluation and the repeat-purchase diagnostic are complete.
+The historical FastAPI demo serves unchanged Strategy A; the discovery rule was
+not promoted. SHAP and Docker remain future checkpoints. Test results must not be
+used for model selection or tuning.
 MLflow and Databricks remain optional extensions.
