@@ -3,9 +3,28 @@
 An independent ML portfolio project using Dunnhumby Complete Journey to recommend
 products to households over the following seven days. Phase 1 provides verified
 ingestion; the first Phase 2 checkpoint implements historical candidates, features,
-labels, chronological development datasets, and coverage diagnostics. LightGBM
-LambdaRank training follows approval of the data checkpoint. Purchases are observed
+labels, chronological development datasets, and coverage diagnostics. Phase 3 adds
+a popularity baseline and LightGBM LambdaRank training/validation. Purchases are observed
 behavior, not sales-representative acceptance or causal uplift labels.
+
+## Phase 3 model training and validation
+
+The frozen-candidate baseline/LambdaRank comparison is implemented in
+`scripts/train_ranker.py`. It verifies the Phase 2 artifacts, fits informative
+training groups and evaluates every validation group. Candidate generation stays
+fixed and test days 625-708 remain sealed. See the exact
+[training and evaluation contract](docs/phase3_contract.md).
+
+```powershell
+.\.venv-phase2\python.exe -m pytest -q
+.\.venv-phase2\python.exe scripts/train_ranker.py
+```
+
+Model artifacts are written under `artifacts/models/lambdarank-v1/`, and the run
+writes measured results to `reports/phase3_validation.md` and `.json`. Existing
+run directories cannot be overwritten; pass `--output artifacts/models/<new-run>`
+for a deliberate new experiment. This command trains; inspecting results does
+not require rerunning it.
 
 ## Phase 2 data checkpoint
 
@@ -110,6 +129,7 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 ## Current scope boundary
 
-The first Phase 2 data/feature integration checkpoint is authorized. Model training,
-held-out test evaluation, SHAP integration, FastAPI serving and Docker packaging
-follow review of that checkpoint. MLflow and Databricks remain optional extensions.
+Phase 3 baseline/LambdaRank training and validation are authorized with fixed
+candidates. Work stops after their comparison for review. Held-out test evaluation,
+SHAP integration, FastAPI serving and Docker packaging remain future checkpoints.
+MLflow and Databricks remain optional extensions.

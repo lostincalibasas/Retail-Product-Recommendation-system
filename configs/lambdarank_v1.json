@@ -1,0 +1,27 @@
+{
+  "num_boost_round": 200,
+  "early_stopping_rounds": 20,
+  "early_stopping_min_delta": 0.00001,
+  "params": {
+    "objective": "lambdarank",
+    "device_type": "cpu",
+    "metric": "None",
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "max_depth": -1,
+    "min_data_in_leaf": 100,
+    "lambda_l2": 1.0,
+    "max_bin": 63,
+    "feature_fraction": 1.0,
+    "bagging_fraction": 1.0,
+    "bagging_freq": 0,
+    "label_gain": [0, 1],
+    "lambdarank_truncation_level": 10,
+    "lambdarank_norm": true,
+    "seed": 42,
+    "deterministic": true,
+    "force_col_wise": true,
+    "num_threads": 4,
+    "verbosity": -1
+  }
+}
