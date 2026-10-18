@@ -1,0 +1,42 @@
+{
+  "affected_groups": 28607,
+  "artifact_hashes_verified": 4,
+  "candidate_rows": 5995400,
+  "eligible_groups": 29977,
+  "frozen_model_run_hashes_verified": 9,
+  "groups": 29977,
+  "independent_results": {
+    "A": {
+      "metrics": {
+        "End-to-end NDCG@5, all groups": 0.18354011202668624,
+        "New-product Recall@5, micro": 7.134286733469534e-05,
+        "New-product Top 5 slot share": 0.031030456683457316,
+        "Precision@5, all groups": 0.1571271308002802,
+        "Recall@5, micro": 0.07250187019176008,
+        "Repeat-product Recall@5, micro": 0.13794477520978857
+      },
+      "new_hits": 11,
+      "new_slots": 4651,
+      "repeat_hits": 23540,
+      "total_hits": 23551
+    },
+    "B": {
+      "metrics": {
+        "End-to-end NDCG@5, all groups": 0.17030300429104922,
+        "New-product Recall@5, micro": 0.0013749716249959465,
+        "New-product Top 5 slot share": 0.22189011575541248,
+        "Precision@5, all groups": 0.1370517396670781,
+        "Recall@5, micro": 0.06323864878260521,
+        "Repeat-product Recall@5, micro": 0.11913412404481741
+      },
+      "new_hits": 212,
+      "new_slots": 33258,
+      "repeat_hits": 20330,
+      "total_hits": 20542
+    }
+  },
+  "method": "Independent pandas sort/group reconstruction and direct metric formulas; no experiment or ranking-metric helpers imported",
+  "metric_absolute_tolerance": 1e-12,
+  "recommendations_verified_per_strategy": 149885,
+  "status": "passed"
+}

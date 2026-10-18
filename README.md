@@ -46,7 +46,23 @@ below verifies and scores the existing model without training or changing it:
 
 Outputs go to `artifacts/diagnostics/lambdarank-v1/`; existing output directories
 cannot be overwritten. See the report for feature importance, score distributions,
-representative purchases, tests and the proposed next experiment awaiting approval.
+representative purchases and tests. The proposed discovery experiment is evaluated
+in the Phase 3.2 checkpoint below.
+
+Phase 3.2 [controlled discovery results](reports/phase3_2_discovery.md) compare the
+original Top 5 with keeping ranks 1-4 and reserving rank 5 for the best unselected
+new-to-household candidate. New hits increase from 11 to 212, while total hits
+fall from 23,551 to 20,542 and NDCG@5 falls from 0.183540 to 0.170303.
+The [verification and decision record](reports/phase3_2_checkpoint.md) recommends
+retaining the original ranking. The alternative has not been promoted.
+
+```powershell
+.\.venv-phase2\python.exe scripts/experiment_discovery.py
+```
+
+This command uses saved validation scores and never trains. Results are already
+saved under `artifacts/experiments/discovery-v1/`; existing directories cannot be
+overwritten. The full regression suite passed 55 tests at this checkpoint.
 
 ## Phase 2 data checkpoint
 
@@ -152,8 +168,10 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 ## Current scope boundary
 
-Phase 3 training/validation and Phase 3.1 saved-model diagnostics are complete with
-fixed candidates. Work stops for review before testing a discovery-aware alternative.
+Phase 3 training/validation, Phase 3.1 diagnostics and Phase 3.2's controlled
+discovery experiment are complete with fixed candidates. Work stops for review;
+the discovery rule has not been promoted, and retaining the original ranking is
+recommended before any further experiment.
 Held-out test evaluation, SHAP integration, FastAPI serving and Docker packaging
 remain future checkpoints.
 MLflow and Databricks remain optional extensions.
