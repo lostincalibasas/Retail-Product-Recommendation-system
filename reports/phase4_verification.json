@@ -1,0 +1,29 @@
+{
+  "absolute_metric_tolerance": 1e-12,
+  "all_saved_scores_match_reloaded_model": true,
+  "candidate_rows": 5998600,
+  "frozen_input_hashes_verified": 21,
+  "groups": 29993,
+  "independent_method": "Raw transaction window labels and first-purchase segmentation; pandas sorting and direct metric formulas; no production evaluator imports",
+  "metrics": {
+    "lambdarank": {
+      "Candidate recall micro": 0.31764917707620016,
+      "End-to-end NDCG@5": 0.18082040602087027,
+      "New Recall@5 micro": 7.729568174791302e-05,
+      "Precision@5": 0.15694328676691227,
+      "Recall@5 micro": 0.06947035349122765,
+      "Repeat Recall@5 micro": 0.1281654535152334
+    },
+    "popularity": {
+      "Candidate recall micro": 0.31764917707620016,
+      "End-to-end NDCG@5": 0.08192072387875499,
+      "New Recall@5 micro": 0.002048335566319695,
+      "Precision@5": 0.06694228653352449,
+      "Recall@5 micro": 0.029631750454556186,
+      "Repeat Recall@5 micro": 0.05296277731770039
+    }
+  },
+  "shard_hashes_verified": 36,
+  "status": "passed",
+  "verification_source_sha256": "bd9f2d8d075a7b0369276d57363d76b67c7982bebfa086e8ba73f29c336837bb"
+}

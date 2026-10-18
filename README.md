@@ -7,12 +7,39 @@ labels, chronological development datasets, and coverage diagnostics. Phase 3 ad
 a popularity baseline and LightGBM LambdaRank training/validation. Purchases are observed
 behavior, not sales-representative acceptance or causal uplift labels.
 
+## Phase 4 final held-out evaluation
+
+The approved, unchanged LambdaRank Strategy A has completed its final evaluation
+on cutoffs 624-701 / target days 625-708. Test NDCG@5 is **0.180820** versus
+**0.081921** for popularity; micro Recall@5 is **6.9470%** versus **2.9632%**.
+Candidate recall is **31.7649%**. Discovery remains weak: the ranker finds 12
+new-product purchases versus 318 for popularity.
+
+See the [final comparison](reports/phase4_test.md),
+[verification, validation changes and handover](reports/phase4_checkpoint.md), and
+[independent numerical checks](reports/phase4_verification.json).
+All 58 automated tests passed. Final data and scores are stored separately under
+`artifacts/data/retail-ranking-test-v1/` and `artifacts/evaluations/heldout-v1/`.
+
+`scripts/evaluate_heldout.py` uses the original candidate/feature functions and
+frozen model, with no fitting or selection. Its outputs already exist and cannot
+be overwritten. To independently verify the saved evaluation:
+
+```powershell
+.\.venv-phase2\python.exe scripts/verify_heldout.py
+```
+
+The test period is now consumed for final evaluation. It must not become tuning
+data while retaining a claim of untouched test performance. Production integration
+awaits approval.
+
 ## Phase 3 model training and validation
 
 The frozen-candidate baseline/LambdaRank comparison is implemented in
 `scripts/train_ranker.py`. It verifies the Phase 2 artifacts, fits informative
 training groups and evaluates every validation group. Candidate generation stays
-fixed and test days 625-708 remain sealed. See the exact
+fixed; test days 625-708 were sealed during model selection and were evaluated
+only after Strategy A approval in Phase 4. See the exact
 [training and evaluation contract](docs/phase3_contract.md).
 
 ```powershell
@@ -32,7 +59,8 @@ was **7.2502%** versus **3.0206%**. This improvement is concentrated in repeat
 products: new-to-household hits fell from 332 to 11. See the
 [measured results](reports/phase3_validation.md) and
 [verification, limitations and handover](reports/phase3_checkpoint.md).
-Validation selected the boosting iteration; the held-out test remains sealed.
+Validation selected the boosting iteration; the final test result is recorded
+separately in Phase 4 above.
 
 Phase 3.1 [model diagnostics](reports/phase3_1_diagnostics.md) explain the discovery
 regression using the saved model and validation data. New products occupy 3.10%
@@ -168,10 +196,8 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 ## Current scope boundary
 
-Phase 3 training/validation, Phase 3.1 diagnostics and Phase 3.2's controlled
-discovery experiment are complete with fixed candidates. Work stops for review;
-the discovery rule has not been promoted, and retaining the original ranking is
-recommended before any further experiment.
-Held-out test evaluation, SHAP integration, FastAPI serving and Docker packaging
-remain future checkpoints.
+Phase 4 final held-out evaluation is complete. Strategy A was approved before
+test access and remains unchanged; the discovery rule was not promoted. Work
+stops for approval before production integration. SHAP, FastAPI and Docker remain
+future checkpoints. Test results must not be used for model selection or tuning.
 MLflow and Databricks remain optional extensions.
