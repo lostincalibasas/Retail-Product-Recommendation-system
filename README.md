@@ -26,6 +26,14 @@ run directories cannot be overwritten; pass `--output artifacts/models/<new-run>
 for a deliberate new experiment. This command trains; inspecting results does
 not require rerunning it.
 
+The completed comparison achieved validation end-to-end NDCG@5 of **0.183540**
+versus **0.082016** for popularity, using all validation groups. Micro Recall@5
+was **7.2502%** versus **3.0206%**. This improvement is concentrated in repeat
+products: new-to-household hits fell from 332 to 11. See the
+[measured results](reports/phase3_validation.md) and
+[verification, limitations and handover](reports/phase3_checkpoint.md).
+Validation selected the boosting iteration; the held-out test remains sealed.
+
 ## Phase 2 data checkpoint
 
 Use the isolated Python 3.12 environment (`.venv-phase2/python.exe` on this Windows
@@ -57,7 +65,8 @@ is a marked smoke build, not the complete dataset.
 Training cutoffs are 365–533 (25 weekly snapshots); validation cutoffs are 540–617
 (12). History includes the cutoff day; labels cover the next seven days. The loader
 excludes transactions after day 624. Test targets 625–708 are not materialized until
-model selection is finished. No model or ranking metrics are claimed at this stage.
+model selection is finished and test evaluation is approved. The Phase 2 report
+contains data diagnostics; measured model results are in the Phase 3 report above.
 
 See [the shared contract](docs/phase2_contract.md) for exact candidate selection,
 25 ordered features, population/label definitions, agent ownership, and future
