@@ -1,0 +1,4 @@
+# Preserve the established ML/API runtime while adding only the frontend.
+-c requirements-phase2.lock.txt
+streamlit==1.64.0
+pydantic==2.12.3

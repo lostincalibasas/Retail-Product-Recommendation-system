@@ -8,8 +8,8 @@ from fastapi import FastAPI, HTTPException, Path as ApiPath
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel
 
+from .api_models import Health, ProductRecommendation, Recommendations
 from .contracts import FEATURE_COLUMNS, ID_COLUMNS, feature_schema
 from .pipeline import sha256
 
@@ -17,24 +17,21 @@ from .pipeline import sha256
 ROOT = Path(__file__).resolve().parents[2]
 
 
-class ProductRecommendation(BaseModel):
-    product_id: int
-    score: float
-
-
-class Recommendations(BaseModel):
-    household_id: int
-    snapshot_cutoff: int
-    model_version: str
-    recommendations: list[ProductRecommendation]
-
-
-class Health(BaseModel):
-    status: str
-    model_version: str
-    snapshot_cutoff: int
-    households: int
-    candidate_rows: int
+def load_product_metadata(path: Path | None, expected_sha256: str | None = None) -> dict:
+    """Display-only static catalog descriptions; never used for ranking."""
+    if path is None or not path.exists():
+        return {}
+    if expected_sha256 is not None and sha256(path) != expected_sha256:
+        raise ValueError("Product metadata checksum mismatch")
+    columns = {"SUB_COMMODITY_DESC": "description", "COMMODITY_DESC": "category",
+               "DEPARTMENT": "department"}
+    products = pd.read_parquet(path, columns=["PRODUCT_ID", *columns])
+    if products.PRODUCT_ID.duplicated().any():
+        raise ValueError("Product metadata must have unique product IDs")
+    products = products.rename(columns=columns).set_index("PRODUCT_ID")
+    return {int(product_id): {key: str(value).strip() if pd.notna(value) and str(value).strip() else None
+                              for key, value in values.items()}
+            for product_id, values in products.to_dict(orient="index").items()}
 
 
 class SnapshotRanker:
@@ -104,12 +101,18 @@ def create_app(
     model_directory: Path = ROOT / "artifacts/models/lambdarank-v1",
     data_directory: Path = ROOT / "artifacts/data/retail-ranking-test-v1",
     cutoff: int = 701,
+    product_table: Path | None = ROOT / "data/processed/product.parquet",
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app):
         app.state.ranker = SnapshotRanker(Path(model_directory), Path(data_directory), cutoff)
+        manifest = json.loads((Path(data_directory) / "manifest.json").read_text())
+        expected = manifest.get("frozen_inputs_sha256", {}).get("data/processed/product.parquet")
+        app.state.product_metadata = load_product_metadata(
+            Path(product_table) if product_table is not None else None, expected)
         yield
         del app.state.ranker
+        del app.state.product_metadata
 
     app = FastAPI(title="Retail Recommendation Demo", version="0.1.0", lifespan=lifespan)
 
@@ -121,6 +124,10 @@ def create_app(
 
     @app.get("/recommendations/{household_id}", response_model=Recommendations)
     def recommendations(household_id: Annotated[int, ApiPath(gt=0)]):
-        return app.state.ranker.recommend(household_id)
+        result = app.state.ranker.recommend(household_id)
+        for product in result.recommendations:
+            for key, value in app.state.product_metadata.get(product.product_id, {}).items():
+                setattr(product, key, value)
+        return result
 
     return app

@@ -84,6 +84,62 @@ API Top 5 responses. They skip when the model/data artifacts are absent. See
 post-hoc household-frequency comparison and [API checkpoint](reports/phase5_api_checkpoint.md)
 for execution evidence.
 
+## Interview demo: Streamlit frontend
+
+The Streamlit page requests recommendations from the existing FastAPI service.
+It shows five ordered product cards, a household input, clear historical-demo
+context, and an expandable section containing model version, cutoff, product IDs
+and raw ranking scores. It does not load a model, read feature snapshots or rank
+products. Scores are not purchase probabilities.
+
+Install the frontend into the existing Python 3.12 environment. The UI requirement
+uses the existing Phase 2 lock as constraints so established ML/API versions stay
+unchanged:
+
+```powershell
+.\.venv-phase2\python.exe -m pip install -r requirements-ui.txt
+```
+
+In **PowerShell terminal 1**, from the repository root, start the backend:
+
+```powershell
+.\.venv-phase2\python.exe -m uvicorn retail_recs.api:create_app --factory --app-dir src --host 127.0.0.1 --port 8000
+```
+
+In **PowerShell terminal 2**, from the same directory, start the frontend:
+
+```powershell
+.\.venv-phase2\python.exe -m streamlit run streamlit_app.py --server.address 127.0.0.1 --server.port 8501
+```
+
+Open `http://127.0.0.1:8501`, leave household **1** selected, and click **Get
+Recommendations**. Stop either process with Ctrl+C in its terminal. For another
+backend port, set `$env:RETAIL_API_URL = 'http://127.0.0.1:8001'` before starting
+Streamlit. Unavailable households and connection failures produce an actionable
+message and clear previous recommendations.
+
+The API now adds optional `description`, `category` and `department` fields from
+the existing `data/processed/product.parquet`, looked up only after ranking.
+`SUB_COMMODITY_DESC` supplies the description, `COMMODITY_DESC` the category, and
+`DEPARTMENT` the department. These are the actual dataset labels, not commercial
+product names. No prices are provided or inferred. Unknown or missing metadata
+becomes null, displayed as unavailable. The original product table is checked
+against its frozen checksum when present; if the entire table is absent the API
+still works with null display fields. The existing backend Docker bundle has no
+product table, so it uses this fallback; frontend Docker packaging is outside
+this checkpoint. Product order and scores remain unchanged.
+
+Focused frontend/API checks:
+
+```powershell
+.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_frontend.py tests/test_api.py
+```
+
+The UI tests use Streamlit's [AppTest framework](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest)
+to exercise the form, cards, details, metadata fallbacks and errors. They skip if
+the optional Streamlit dependency is absent. See the
+[frontend checkpoint](reports/phase5_streamlit_checkpoint.md) for actual results.
+
 ## Docker demo (Windows PowerShell)
 
 Docker configuration is provided, but **the image has not been built or run in
@@ -304,8 +360,8 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 ## Current scope boundary
 
 Phase 4 final held-out evaluation and the repeat-purchase diagnostic are complete.
-The historical FastAPI demo serves unchanged Strategy A; the discovery rule was
-not promoted. Minimal Docker packaging is prepared; its Linux build/run is pending
+The historical FastAPI and Streamlit demo serves unchanged Strategy A; the discovery
+rule was not promoted. Minimal backend Docker packaging is prepared; its Linux build/run is pending
 Docker availability. SHAP remains a future checkpoint. Test results must not be
 used for model selection or tuning.
 MLflow and Databricks remain optional extensions.

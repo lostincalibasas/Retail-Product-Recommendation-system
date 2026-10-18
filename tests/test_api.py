@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from retail_recs.api import ROOT, SnapshotRanker, create_app
+from retail_recs.api import ROOT, SnapshotRanker, create_app, load_product_metadata
 from retail_recs.contracts import FEATURE_COLUMNS
 
 
@@ -51,6 +51,39 @@ def test_all_snapshot_scores_and_api_top5_match_saved_predictions(client):
         assert client.get(f"/recommendations/{household}").json() == body
     assert "relevance" not in ranker.rows
     assert "lambdarank_score" not in ranker.rows
+
+
+def test_metadata_matches_original_product_table_without_changing_ranking(client):
+    if not (ROOT / "data/processed/product.parquet").exists():
+        pytest.skip("Optional original product metadata is absent")
+    products = pd.read_parquet(ROOT / "data/processed/product.parquet").set_index("PRODUCT_ID")
+    body = client.get("/recommendations/1").json()
+    assert [p["product_id"] for p in body["recommendations"]] == [1082185, 1049998, 995242, 1005186, 1074612]
+    for product in body["recommendations"]:
+        source = products.loc[product["product_id"]]
+        assert product["description"] == source.SUB_COMMODITY_DESC.strip()
+        assert product["category"] == source.COMMODITY_DESC.strip()
+        assert product["department"] == source.DEPARTMENT.strip()
+
+
+def test_missing_or_blank_metadata_returns_nulls(tmp_path):
+    assert load_product_metadata(None) == {}
+    assert load_product_metadata(tmp_path / "missing.parquet") == {}
+    path = tmp_path / "product.parquet"
+    pd.DataFrame({"PRODUCT_ID": [1], "SUB_COMMODITY_DESC": [None],
+                  "COMMODITY_DESC": [" "], "DEPARTMENT": [" GROCERY "]}).to_parquet(path)
+    assert load_product_metadata(path) == {1: {"description": None, "category": None, "department": "GROCERY"}}
+    with pytest.raises(ValueError, match="checksum"):
+        load_product_metadata(path, "wrong-checksum")
+
+
+def test_unknown_product_metadata_preserves_ids_and_scores(client, monkeypatch):
+    original = client.get("/recommendations/1").json()
+    monkeypatch.setattr(client.app.state, "product_metadata", {})
+    result = client.get("/recommendations/1").json()
+    assert [(p["product_id"], p["score"]) for p in result["recommendations"]] == [
+        (p["product_id"], p["score"]) for p in original["recommendations"]]
+    assert all(p["description"] is None and p["category"] is None for p in result["recommendations"])
 
 
 @pytest.mark.parametrize("household,status", [(999999999, 404), (0, 422), (-1, 422), ("abc", 422)])
