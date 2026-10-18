@@ -1,0 +1,10 @@
+# Serving-only direct dependencies; same versions as the verified Phase 5 runtime.
+# Transitive packages resolve on Linux; this is not a full Linux environment lock.
+numpy==2.2.6
+pandas==2.3.3
+pyarrow==24.0.0
+scipy==1.15.3
+lightgbm==4.6.0
+fastapi==0.119.1
+pydantic==2.12.3
+uvicorn==0.38.0

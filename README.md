@@ -82,7 +82,63 @@ Phase 4 predictions to verify every cutoff-701 model score and representative
 API Top 5 responses. They skip when the model/data artifacts are absent. See
 [the repeat-purchase diagnostic](reports/phase4_repeat_diagnostic.md) for the
 post-hoc household-frequency comparison and [API checkpoint](reports/phase5_api_checkpoint.md)
-for execution evidence. No Docker packaging is included.
+for execution evidence.
+
+## Docker demo (Windows PowerShell)
+
+Docker configuration is provided, but **the image has not been built or run in
+this workspace: the Docker CLI is unavailable**. The minimal file bundle and native API
+have been verified; Linux dependency installation and container prediction parity
+remain to be verified using the commands below. See the
+[Docker checkpoint](reports/phase5_docker_checkpoint.md) for measured checks.
+
+Use Docker Desktop with its Linux container engine running, and run these commands
+from the repository root. The five local artifact files listed in the Dockerfile
+must already exist. The image includes only the frozen model, model manifest,
+feature schema, data manifest, and the cutoff-701 candidate rows, plus Python
+source and serving dependencies. `.dockerignore` excludes other snapshots, saved
+predictions, raw/processed datasets, virtual environments, Git metadata and secrets.
+The existing snapshot contains labels, but serving continues to exclude them by
+column projection; no separate target files enter the image.
+
+```powershell
+# Confirm Docker Desktop's Linux engine is ready, then build.
+docker version
+docker build --platform linux/amd64 -t retail-recs-demo:phase5 .
+
+# Run in the background; bind the demo to localhost only.
+docker run --detach --rm --name retail-recs-demo -p 127.0.0.1:8000:8000 retail-recs-demo:phase5
+docker logs retail-recs-demo
+```
+
+After the logs say startup is complete, test all three endpoints and compare the
+recommendation with the unchanged local API (using the existing Python environment):
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+(Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/docs).StatusCode
+Invoke-RestMethod http://127.0.0.1:8000/recommendations/1 | ConvertTo-Json -Depth 5
+.\.venv-phase2\python.exe -B scripts/verify_api_demo.py --url http://127.0.0.1:8000
+
+# Recheck all 500,000 native scores against the saved Phase 4 predictions.
+.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_api.py
+
+# Stop and remove the demo container (--rm above removes it on exit).
+docker stop retail-recs-demo
+```
+
+The parity script checks `/health`, `/docs`, exact Top 5 IDs/order and scores
+within absolute tolerance 1e-12 against the local API. It requires the existing
+local artifacts and Phase 5 Python dependencies, including `httpx`. This tolerance
+allows tiny cross-platform floating-point differences; the native 500,000-score
+test still requires exact equality. If port 8000 is occupied, use
+`-p 127.0.0.1:8001:8000` and test URL `http://127.0.0.1:8001` instead.
+
+The image uses Python 3.12, pinned direct serving dependencies, the Linux OpenMP
+runtime required by LightGBM, and an unprivileged runtime user. The base-image tag
+and transitive dependencies are not fully locked; no bit-for-bit build guarantee
+is claimed. Data/model artifacts remain ignored by Git, even though these five
+files are deliberately included in the local Docker build context.
 
 ## Phase 3 model training and validation
 
@@ -249,6 +305,7 @@ The checks are practical diagnostics, not a complete formal schema contract: thi
 
 Phase 4 final held-out evaluation and the repeat-purchase diagnostic are complete.
 The historical FastAPI demo serves unchanged Strategy A; the discovery rule was
-not promoted. SHAP and Docker remain future checkpoints. Test results must not be
+not promoted. Minimal Docker packaging is prepared; its Linux build/run is pending
+Docker availability. SHAP remains a future checkpoint. Test results must not be
 used for model selection or tuning.
 MLflow and Databricks remain optional extensions.

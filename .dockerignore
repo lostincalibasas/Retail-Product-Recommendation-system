@@ -1,0 +1,20 @@
+# Allow only the source and artifacts required by the historical API.
+**
+!Dockerfile
+!.dockerignore
+!requirements-serving.txt
+!src/
+!src/retail_recs/
+!src/retail_recs/*.py
+!artifacts/
+!artifacts/models/
+!artifacts/models/lambdarank-v1/
+!artifacts/models/lambdarank-v1/model.txt
+!artifacts/models/lambdarank-v1/manifest.json
+!artifacts/models/lambdarank-v1/feature_schema.json
+!artifacts/data/
+!artifacts/data/retail-ranking-test-v1/
+!artifacts/data/retail-ranking-test-v1/manifest.json
+!artifacts/data/retail-ranking-test-v1/test/
+!artifacts/data/retail-ranking-test-v1/test/cutoff_701/
+!artifacts/data/retail-ranking-test-v1/test/cutoff_701/rows.parquet
