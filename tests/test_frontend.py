@@ -10,6 +10,7 @@ import pytest
 AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
 
 
+
 from retail_recs import demo_client
 from retail_recs.demo_client import DemoError, fetch_recommendations
 
