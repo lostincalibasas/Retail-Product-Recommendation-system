@@ -1,367 +1,401 @@
-# Personalized Retail Recommendation Engine
+# Smart Order ML
+**End-to-End Retail Product Recommendation System**
 
-An independent ML portfolio project using Dunnhumby Complete Journey to recommend
-products to households over the following seven days. Phase 1 provides verified
-ingestion; the first Phase 2 checkpoint implements historical candidates, features,
-labels, chronological development datasets, and coverage diagnostics. Phase 3 adds
-a popularity baseline and LightGBM LambdaRank training/validation. Purchases are observed
-behavior, not sales-representative acceptance or causal uplift labels.
+An independent portfolio project using **Dunnhumby Complete Journey** to recommend
+relevant products for a household's next shopping period. The goal is to make
+repeat shopping more convenient by ranking **five products for a seven-day
+purchase horizon**.
 
-## Phase 4 final held-out evaluation
+The solution combines historical candidate generation, **25 point-in-time
+features**, **LightGBM LambdaRank**, a **FastAPI** inference service and a
+**Streamlit** frontend. It is separate from any employer's internal system and
+has not been commercially deployed or shown to produce business uplift.
 
-The approved, unchanged LambdaRank Strategy A has completed its final evaluation
-on cutoffs 624-701 / target days 625-708. Test NDCG@5 is **0.180820** versus
-**0.081921** for popularity; micro Recall@5 is **6.9470%** versus **2.9632%**.
-Candidate recall is **31.7649%**. Discovery remains weak: the ranker finds 12
-new-product purchases versus 318 for popularity.
+| Metric | Verified result |
+|---|---:|
+| LambdaRank NDCG@5 | **0.180820** |
+| Global popularity NDCG@5 | 0.081921 |
+| NDCG@5 ratio vs. popularity | **Approximately 2.21×** |
+| LambdaRank Recall@5, micro | 6.9470% |
+| Candidate recall, micro | 31.7649% |
+| Automated tests | **86 passed** |
 
-See the [final comparison](reports/phase4_test.md),
-[verification, validation changes and handover](reports/phase4_checkpoint.md), and
-[independent numerical checks](reports/phase4_verification.json).
-All 58 automated tests passed. Final data and scores are stored separately under
-`artifacts/data/retail-ranking-test-v1/` and `artifacts/evaluations/heldout-v1/`.
+These are **offline held-out test results** and the latest verified local test
+count (2026-10-24), not commercial uplift. A 2.21× NDCG ratio corresponds to about
+**120.73% higher NDCG**, not a 221% improvement.
 
-`scripts/evaluate_heldout.py` uses the original candidate/feature functions and
-frozen model, with no fitting or selection. Its outputs already exist and cannot
-be overwritten. To independently verify the saved evaluation:
+> **Demo availability:** datasets, models and snapshots are ignored by Git, and
+> **no downloadable frozen model/demo bundle is currently provided**. A fresh
+> clone cannot run inference without separately supplied artifacts. Docker
+> execution and clean-machine reproducibility remain unverified.
 
-```powershell
-.\.venv-phase2\python.exe scripts/verify_heldout.py
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Offline["Offline preparation and model development"]
+        A[Raw CSVs] --> B[Validation and Parquet]
+        B --> C[Historical candidate generation]
+        C --> D[25 historical features]
+        D --> E[Chronological training and validation]
+        E --> F[Frozen LightGBM LambdaRank]
+        D --> S[Precomputed historical snapshot]
+    end
+    subgraph Demo["Historical-snapshot inference"]
+        F --> G[FastAPI]
+        S --> G
+        G --> H[Streamlit product cards]
+    end
 ```
 
-The test period is now consumed for final evaluation. It must not become tuning
-data while retaining a claim of untouched test performance.
+The model and serving snapshot are prepared offline. FastAPI loads them at startup
+and scores a household's existing candidates on request. It **does not retrain,
+rebuild candidates or compute future labels** during inference.
 
-## Historical FastAPI demo
+## Methodology
 
-The API serves the original frozen Strategy A Top 5 from the **day 701 historical
-snapshot**, predicting the next seven days. It loads the 152-tree model once at
-startup and scores each requested household's 200 saved candidates. No target
-labels or saved predictions enter serving. This is a historical portfolio demo,
-not a live retail catalog; scores are ranking scores, not purchase probabilities.
-The original policy favors repeats but does not require all five to be repeats.
+**Candidates.** Up to approximately **200 products per household-week** are drawn
+from three historical sources: up to 80 recent repeat products, up to 60 popular
+products from the household's top three categories, and global popularity to fill
+the deduplicated pool. Category history uses 84 days; recent global popularity uses
+28 days, with all-history popularity as a shortage fallback. The 200-candidate cap
+was an **initial pragmatic scope decision, not an optimized candidate count**.
 
-The existing Python 3.12 environment already contains the API dependencies,
-recorded in `requirements-phase2.lock.txt`. The `api` project extra also declares
-the minimal serving dependencies. From the repository root:
+**Features.** The 25 ordered float32 features use only information available at
+each cutoff:
+
+| Feature group | Count | Examples |
+|---|---:|---|
+| Household activity | 6 | Purchase-row frequency, spend, product diversity, recency |
+| Product activity | 6 | Purchasing-household counts, popularity, historical mean price |
+| Household–product history | 7 | Repeat frequency, quantity, spend, recency, mean price |
+| Affinity and relative price | 3 | Category affinity, brand affinity, household-relative price |
+| Candidate-source flags | 3 | Repeat, category and popularity source membership |
+
+The exact ordering is in [the feature schema](configs/feature_schema_v1.json).
+Identifiers and labels are excluded from model inputs.
+
+**Labels and time boundaries.** For cutoff `c`, history uses positive-quantity
+purchases with `DAY <= c`. A distinct household–product purchase in
+`c < DAY <= c+7` is relevant; other candidate rows receive label zero. Future
+positives are never injected into candidate sets.
+
+| Split | Weekly prediction cutoffs | Target-day coverage |
+|---|---|---|
+| Train | 365–533 | 366–540 |
+| Validation | 540–617 | 541–624 |
+| Held-out test, already evaluated | 624–701 | 625–708 |
+
+Historical-only snapshot checks and future-perturbation tests guard against
+leakage. At later rolling cutoffs, earlier observed purchases can enter history.
+Queries are **household–cutoff ranking groups**, with feature/label alignment,
+group sizes and offsets verified before use.
+
+**Ranking.** LambdaRank learns within-group product ordering from binary relevance.
+Validation selected the boosting iteration; the final frozen model has **152
+trees**. Ranking seeds, parameters and provenance are recorded in the
+[model configuration](configs/lambdarank_v1.json) and
+[training contract](docs/phase3_contract.md). The test period is already consumed:
+it must not be reused for tuning or new untouched-test claims.
+
+## Model evaluation and limitations
+
+The final evaluation used **29,993 household-week groups** and **5,998,600
+candidate rows**, with identical candidates for both models.
+
+| Held-out metric | Global popularity | Frozen LambdaRank |
+|---|---:|---:|
+| End-to-end NDCG@5, all groups | 0.081921 | **0.180820** |
+| Precision@5, all groups | 6.6942% | **15.6943%** |
+| Recall@5, micro | 2.9632% | **6.9470%** |
+| Candidate recall, micro | 31.7649% | 31.7649% |
+| Repeat-product Recall@5, micro | 5.2963% | **12.8165%** |
+
+NDCG is a macro average over groups; zero ideal denominators contribute zero.
+End-to-end NDCG normalizes against all actual target products, including retrieval
+misses. Micro Recall@5 divides total Top 5 hits by total target products.
+No-purchase and zero-positive groups stay in evaluation.
+
+**Retrieval and ranking are separate constraints.** Candidate recall measures
+which actual purchases reached the candidate pool. The ranker cannot recover
+products outside that pool, and five recommendation slots also limit recall.
+Candidate-only ranking metrics and exact denominators are documented in the
+[final evaluation](reports/phase4_test.md) and
+[repeat-purchase diagnostic](reports/phase4_repeat_diagnostic.md).
+
+### Stronger personalized baseline — post-hoc diagnostic
+
+After final testing, an 84-day household–product purchase-row-frequency baseline
+was evaluated using the same frozen candidate pools. It ranks only historically
+purchased candidates; non-repeat products are ineligible and unfilled slots count
+as misses. This was **post-hoc analysis**, not a prespecified model-selection
+experiment.
+
+| Repeat-purchase result, all test groups | Household frequency | Frozen LambdaRank |
+|---|---:|---:|
+| Repeat hits in Top 5 | 21,944 | **23,524** |
+| Repeat-product Recall@5, micro | 11.955716% | **12.816545%** |
+
+The ranker's 1,580 additional repeat hits represent a **7.20%** increase over this
+stronger baseline. This remains descriptive offline evidence, not measured
+shopping convenience or causal business impact.
+
+**Discovery limitation.** The model strongly favors repeat purchases and is weaker
+at new-product discovery. A validation experiment reserved the fifth slot for a
+new-to-household product. It increased discovery but reduced overall NDCG@5 from
+**0.183540 to 0.170303**, so the rule was **not adopted**. The original Strategy A
+Top 5 remains unchanged. See [the experiment](reports/phase3_2_discovery.md) and
+[held-out verification](reports/phase4_checkpoint.md).
+
+## Application Demo
+
+Select a household in **Streamlit** and click **Get Recommendations** to receive
+five ordered product cards from the existing **FastAPI** backend. The demo uses
+the precomputed **cutoff-day-701** historical snapshot to predict purchases on
+days **702–708**; it is not live personalized shopping data.
+
+Product descriptions and categories come from the original catalog, not invented
+names or prices. The dataset provides taxonomy descriptions rather than
+commercial product names. Missing metadata is labeled unavailable. Model version,
+cutoff, product IDs and raw scores appear in expandable technical details.
+**Ranking scores are not purchase probabilities.**
+
+Startup commands and required artifacts are listed below. The
+[frontend checkpoint](reports/phase5_streamlit_checkpoint.md) records the local
+HTTP and rendered-widget smoke checks.
+
+## Installation and reproducibility
+
+Choose between **reproducing development work from a fresh clone** and **running
+the frozen demo with existing local artifacts**. They are different workflows:
+training a new development model does not create the exact frozen serving bundle.
+
+### Environment — Windows PowerShell
+
+Run commands from the repository root. The supported runtime is **Python 3.12**;
+the verified environment is **3.12.15, Windows x86-64**. With Conda installed,
+create a new prefix only if one does not already exist:
+
+```powershell
+conda create --prefix .venv-phase2 --file environment/conda-win-64.lock.txt --yes
+.\.venv-phase2\python.exe -m pip install -r requirements-phase2.lock.txt
+.\.venv-phase2\python.exe -m pip install -r requirements-ui.txt
+.\.venv-phase2\python.exe -m pip check
+```
+
+These commands use Conda's root-level `python.exe`; a standard Windows `venv`
+instead uses `Scripts\python.exe`. The legacy `.venv` and `requirements.txt`
+describe Phase 1 ingestion, not the current ML/API/UI environment.
+
+The Conda lock is Windows-specific. The Phase 2 lock pins the original runtime
+packages; UI requirements constrain shared versions. New UI/Linux transitive
+packages and the Docker base-image tag are not fully locked. A clean-machine
+installation has not been verified.
+
+### Fresh clone: acquire and preprocess the dataset
+
+Obtain the eight CSVs from the [source dataset](https://www.kaggle.com/datasets/frtgnn/dunnhumby-the-complete-journey)
+or the [documented mirror release](https://github.com/bltap-plmarket/dunnhumby-complete-journey/releases/tag/v1.0-data).
+The original mirror archive is 135,859,064 bytes. The following checks its
+SHA-256 before extraction and refuses to replace an existing archive:
+
+```powershell
+New-Item -ItemType Directory -Force data\raw | Out-Null
+$datasetArchive = 'data\raw\dunnhumby-complete-journey-data.zip'
+if (Test-Path -LiteralPath $datasetArchive) { throw 'Archive exists; verify and reuse it instead.' }
+Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/bltap-plmarket/dunnhumby-complete-journey/releases/download/v1.0-data/dunnhumby-complete-journey-data.zip' -OutFile $datasetArchive
+$expectedDatasetSha = '324288a8811c4ed86e85415fdee36f3692582e2cc9dd87866c0e333df237f782'
+if ((Get-FileHash -LiteralPath $datasetArchive -Algorithm SHA256).Hash -ne $expectedDatasetSha) { throw 'Dataset archive checksum mismatch.' }
+Expand-Archive -LiteralPath $datasetArchive -DestinationPath data\raw
+```
+
+The local original archive matched that digest; full download availability has
+not been retested during README preparation. Place these files directly in
+`data/raw/`: `campaign_desc.csv`, `campaign_table.csv`, `causal_data.csv`,
+`coupon.csv`, `coupon_redempt.csv`, `hh_demographic.csv`, `product.csv` and
+`transaction_data.csv`.
+
+### Development reproduction — separate copy only
+
+**Use a separate reproduction copy/checkout. Do not run these commands over the
+frozen workspace.** They are not needed for the interview demo.
+
+```powershell
+.\.venv-phase2\python.exe scripts/ingest_data.py
+.\.venv-phase2\python.exe scripts/build_training_data.py --config configs/data_v1.json --output artifacts/data/retail-ranking-reproduction-v1
+.\.venv-phase2\python.exe scripts/train_ranker.py --data artifacts/data/retail-ranking-reproduction-v1 --output artifacts/models/reproduction-v1 --config configs/lambdarank_v1.json
+```
+
+Ingestion writes Parquet and **replaces `reports/data_exploration.md`** in that
+copy. The builder creates train/validation rows, targets, groups and manifests;
+existing output directories are refused. `--limit-cutoffs 1` is smoke mode only
+and is rejected by the full training loader.
+
+The final command **trains a new model** and writes a new artifact directory.
+It also **replaces `reports/phase3_validation.json` and `.md` regardless of
+`--output`**; changing only the model directory does not protect those reports.
+Exact published model bytes or metrics are not promised for a new run, and
+`reproduction-v1` is not automatically served by the API.
+
+The historical `scripts/evaluate_heldout.py` is pinned to the approved model hash
+and checkpoint; it writes test artifacts and Phase 4 reports. It is not a generic
+new-model evaluator or serving-bundle exporter. `scripts/verify_heldout.py` also
+writes its verification report. Neither belongs in frozen-demo startup.
+See the [data contract](docs/phase2_contract.md) for further details.
+
+### Frozen demo: separately provisioned local artifacts
+
+**There is no public download URL or automatic provisioning for these files.**
+They are ignored by Git and must already exist at these repository-relative paths:
+
+| File | Purpose |
+|---|---|
+| `artifacts/models/lambdarank-v1/model.txt` | Frozen trained model |
+| `artifacts/models/lambdarank-v1/manifest.json` | Model provenance/checksums |
+| `artifacts/models/lambdarank-v1/feature_schema.json` | Ordered feature schema |
+| `artifacts/data/retail-ranking-test-v1/manifest.json` | Snapshot provenance/checksum |
+| `artifacts/data/retail-ranking-test-v1/test/cutoff_701/rows.parquet` | Historical candidate features |
+| `data/processed/product.parquet` | Optional real product descriptions/categories |
+
+The five mandatory files total approximately 8.6 MB. Missing catalog metadata
+leaves IDs/scores intact with unavailable descriptions. Startup checks artifact
+integrity, feature order and the saved temporal audit. The approved model SHA-256
+is `af9492f58af0b891b6f766213a5eb823bbb7fbf46aeb1719aba6c406515219ec`.
+Inspect it without training:
+
+```powershell
+Get-FileHash -LiteralPath artifacts\models\lambdarank-v1\model.txt -Algorithm SHA256
+```
+
+## Running FastAPI and Streamlit
+
+With the environment and frozen local artifacts present, start **terminal 1**:
 
 ```powershell
 .\.venv-phase2\python.exe -m uvicorn retail_recs.api:create_app --factory --app-dir src --host 127.0.0.1 --port 8000
 ```
 
-Open `http://127.0.0.1:8000/docs`, or request:
+The factory loads the frozen model and snapshot once. Unknown households return
+404; nonpositive/noninteger IDs return 422. After startup, check the service:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/health
-Invoke-RestMethod http://127.0.0.1:8000/recommendations/1
+Invoke-RestMethod http://127.0.0.1:8000/recommendations/1 | ConvertTo-Json -Depth 5
+(Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/docs).StatusCode
+.\.venv-phase2\python.exe -B scripts/verify_api_demo.py --url http://127.0.0.1:8000
 ```
 
-`/health` reports readiness, model version, snapshot cutoff, household count and
-candidate-row count after successful startup. `/recommendations/{household_id}`
-returns the household ID, `snapshot_cutoff`, `model_version`, and five
-`recommendations`, each with `product_id` and `score`. Equal scores use ascending
-product IDs. Unknown households return 404; invalid or nonpositive IDs return 422.
+The verifier requires the local ML/API environment including httpx; it checks
+matching IDs/order and scores within absolute tolerance 1e-12.
 
-Startup verifies model/schema/snapshot checksums, explicit feature order, finite
-float32 features, candidate uniqueness/counts, and the snapshot's recorded
-point-in-time verification. Labels stored alongside features are excluded by
-Parquet column projection; target files are never opened. Missing or inconsistent
-artifacts prevent startup. Required local artifacts are ignored by Git:
-
-- `artifacts/models/lambdarank-v1/`: model, manifest and feature schema.
-- `artifacts/data/retail-ranking-test-v1/`: manifest and cutoff-701 rows snapshot.
-
-Run focused tests with:
-
-```powershell
-.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_api.py
-```
-
-These integration tests require the local artifacts and additionally use frozen
-Phase 4 predictions to verify every cutoff-701 model score and representative
-API Top 5 responses. They skip when the model/data artifacts are absent. See
-[the repeat-purchase diagnostic](reports/phase4_repeat_diagnostic.md) for the
-post-hoc household-frequency comparison and [API checkpoint](reports/phase5_api_checkpoint.md)
-for execution evidence.
-
-## Interview demo: Streamlit frontend
-
-The Streamlit page requests recommendations from the existing FastAPI service.
-It shows five ordered product cards, a household input, clear historical-demo
-context, and an expandable section containing model version, cutoff, product IDs
-and raw ranking scores. It does not load a model, read feature snapshots or rank
-products. Scores are not purchase probabilities.
-
-Install the frontend into the existing Python 3.12 environment. The UI requirement
-uses the existing Phase 2 lock as constraints so established ML/API versions stay
-unchanged:
-
-```powershell
-.\.venv-phase2\python.exe -m pip install -r requirements-ui.txt
-```
-
-In **PowerShell terminal 1**, from the repository root, start the backend:
-
-```powershell
-.\.venv-phase2\python.exe -m uvicorn retail_recs.api:create_app --factory --app-dir src --host 127.0.0.1 --port 8000
-```
-
-In **PowerShell terminal 2**, from the same directory, start the frontend:
+Start **terminal 2**:
 
 ```powershell
 .\.venv-phase2\python.exe -m streamlit run streamlit_app.py --server.address 127.0.0.1 --server.port 8501
 ```
 
-Open `http://127.0.0.1:8501`, leave household **1** selected, and click **Get
-Recommendations**. Stop either process with Ctrl+C in its terminal. For another
-backend port, set `$env:RETAIL_API_URL = 'http://127.0.0.1:8001'` before starting
-Streamlit. Unavailable households and connection failures produce an actionable
-message and clear previous recommendations.
+Open **http://127.0.0.1:8501**, choose household **1**, and click **Get
+Recommendations**. Stop either process with Ctrl+C in its terminal.
 
-The API now adds optional `description`, `category` and `department` fields from
-the existing `data/processed/product.parquet`, looked up only after ranking.
-`SUB_COMMODITY_DESC` supplies the description, `COMMODITY_DESC` the category, and
-`DEPARTMENT` the department. These are the actual dataset labels, not commercial
-product names. No prices are provided or inferred. Unknown or missing metadata
-becomes null, displayed as unavailable. The original product table is checked
-against its frozen checksum when present; if the entire table is absent the API
-still works with null display fields. The existing backend Docker bundle has no
-product table, so it uses this fallback; frontend Docker packaging is outside
-this checkpoint. Product order and scores remain unchanged.
-
-Focused frontend/API checks:
+No environment variable is required by default. If FastAPI uses another port,
+change its `--port` and set the matching URL before starting Streamlit:
 
 ```powershell
-.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_frontend.py tests/test_api.py
+$env:RETAIL_API_URL = 'http://127.0.0.1:8001'
 ```
 
-The UI tests use Streamlit's [AppTest framework](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest)
-to exercise the form, cards, details, metadata fallbacks and errors. They skip if
-the optional Streamlit dependency is absent. See the
-[frontend checkpoint](reports/phase5_streamlit_checkpoint.md) for actual results.
+## Tests and verification
 
-## Docker demo (Windows PowerShell)
-
-Docker configuration is provided, but **the image has not been built or run in
-this workspace: the Docker CLI is unavailable**. The minimal file bundle and native API
-have been verified; Linux dependency installation and container prediction parity
-remain to be verified using the commands below. See the
-[Docker checkpoint](reports/phase5_docker_checkpoint.md) for measured checks.
-
-Use Docker Desktop with its Linux container engine running, and run these commands
-from the repository root. The five local artifact files listed in the Dockerfile
-must already exist. The image includes only the frozen model, model manifest,
-feature schema, data manifest, and the cutoff-701 candidate rows, plus Python
-source and serving dependencies. `.dockerignore` excludes other snapshots, saved
-predictions, raw/processed datasets, virtual environments, Git metadata and secrets.
-The existing snapshot contains labels, but serving continues to exclude them by
-column projection; no separate target files enter the image.
+The latest complete local run passed **86 tests on 2026-10-24**, including exact
+equality of **all 500,000 cutoff-701 model scores** with saved Phase 4 predictions.
 
 ```powershell
-# Confirm Docker Desktop's Linux engine is ready, then build.
+$pytestTemp = Join-Path 'tmp' ('pytest-' + [guid]::NewGuid().ToString('N'))
+.\.venv-phase2\python.exe -B -m pytest tests/ -v -p no:cacheprovider --basetemp="$pytestTemp"
+```
+
+The dedicated temporary directory isolates test outputs. The synthetic
+fit/save/reload unit test fits only a small temporary fixture, never the frozen
+retail model. Other checks cover temporal invariance, ranking groups, metric
+definitions, metadata, UI error paths and API parity.
+
+Full API checks require the local artifacts. The 500,000-score test additionally
+needs `artifacts/evaluations/heldout-v1/test_predictions.parquet`; this saved
+reference is **not required for inference**. API tests skip without model/data
+prerequisites, and frontend tests skip without Streamlit. Check pass/skip counts:
+a green source-only run does not establish complete demo parity.
+
+## Repository structure
+
+```text
+src/retail_recs/     Data contracts, candidates, features, ranking, API, HTTP client
+scripts/            Ingestion, development training and verification entry points
+tests/              Data, temporal, ranking, API and frontend tests
+configs/            Data, feature-schema and model configuration
+environment/        Windows Conda runtime lock
+data/raw/           Archive and CSVs (ignored)
+data/processed/     Generated Parquet tables (ignored)
+artifacts/          Versioned data/model/evaluation outputs (ignored)
+reports/            Measured results and technical handovers
+streamlit_app.py    Interview frontend
+.streamlit/         Tracked theme config; secrets.toml is ignored
+Dockerfile          Minimal backend container configuration
+```
+
+Further records: [ingestion](reports/data_exploration.md),
+[data integration](reports/phase2_data_checkpoint.md),
+[model comparison](reports/phase3_checkpoint.md), and
+[API integration](reports/phase5_api_checkpoint.md).
+
+## Known limitations and future improvements
+
+- **Artifact availability:** no public frozen bundle; fresh-clone inference is
+  blocked until artifacts are supplied. Training reproduction does not provision
+  the historical serving snapshot.
+- **Validation scope:** Windows local behavior is verified; clean-machine setup
+  and Docker execution are not. UI/Linux transitive dependencies and the base
+  image are not fully locked.
+- **Model scope:** discovery is weaker than repeat prediction; retrieval coverage
+  and Top 5 capacity constrain recall. Static catalog attributes are assumed;
+  inventory and current product prices are not modeled.
+- **Deployment scope:** this is a localhost portfolio demo without a production
+  security/scaling assessment, not an internet-facing retail deployment.
+- **Possible next work:** review artifact distribution/licensing, verify a clean
+  installation and Linux container, and consider further explainability. These
+  are future tasks, not implemented or validated capabilities.
+
+### Docker — configuration only, execution unverified
+
+The image requires the same five local serving artifacts before building; it
+does not download them. It packages FastAPI, not Streamlit or the product catalog,
+so product metadata is null. The earlier reduced-bundle check used Windows
+Python, not Docker. See the [Docker checkpoint](reports/phase5_docker_checkpoint.md).
+
+With Docker Desktop's Linux engine available, the following commands remain
+**unverified execution steps**. Ensure host port 8000 is free first:
+
+```powershell
 docker version
 docker build --platform linux/amd64 -t retail-recs-demo:phase5 .
-
-# Run in the background; bind the demo to localhost only.
 docker run --detach --rm --name retail-recs-demo -p 127.0.0.1:8000:8000 retail-recs-demo:phase5
 docker logs retail-recs-demo
-```
-
-After the logs say startup is complete, test all three endpoints and compare the
-recommendation with the unchanged local API (using the existing Python environment):
-
-```powershell
-Invoke-RestMethod http://127.0.0.1:8000/health
-(Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/docs).StatusCode
-Invoke-RestMethod http://127.0.0.1:8000/recommendations/1 | ConvertTo-Json -Depth 5
+# After startup completes:
 .\.venv-phase2\python.exe -B scripts/verify_api_demo.py --url http://127.0.0.1:8000
-
-# Recheck all 500,000 native scores against the saved Phase 4 predictions.
-.\.venv-phase2\python.exe -B -m pytest -q -p no:cacheprovider tests/test_api.py
-
-# Stop and remove the demo container (--rm above removes it on exit).
 docker stop retail-recs-demo
 ```
 
-The parity script checks `/health`, `/docs`, exact Top 5 IDs/order and scores
-within absolute tolerance 1e-12 against the local API. It requires the existing
-local artifacts and Phase 5 Python dependencies, including `httpx`. This tolerance
-allows tiny cross-platform floating-point differences; the native 500,000-score
-test still requires exact equality. If port 8000 is occupied, use
-`-p 127.0.0.1:8001:8000` and test URL `http://127.0.0.1:8001` instead.
+`--rm` removes the stopped container. Linux dependency installation, runtime
+permissions and cross-platform score parity have not been established.
 
-The image uses Python 3.12, pinned direct serving dependencies, the Linux OpenMP
-runtime required by LightGBM, and an unprivileged runtime user. The base-image tag
-and transitive dependencies are not fully locked; no bit-for-bit build guarantee
-is claimed. Data/model artifacts remain ignored by Git, even though these five
-files are deliberately included in the local Docker build context.
+## Dataset attribution and licensing
 
-## Phase 3 model training and validation
+Dataset: [Dunnhumby Complete Journey](https://www.kaggle.com/datasets/frtgnn/dunnhumby-the-complete-journey).
+The [documented mirror](https://github.com/bltap-plmarket/dunnhumby-complete-journey/releases/tag/v1.0-data)
+identifies its contents license as
+[DbCL-1.0](https://opendatacommons.org/licenses/dbcl/1.0/). Review the applicable
+terms and publication of the existing household-level diagnostic examples before
+distributing data or derived snapshots. Dataset terms are separate from source-code
+licensing and third-party dependency licenses.
 
-The frozen-candidate baseline/LambdaRank comparison is implemented in
-`scripts/train_ranker.py`. It verifies the Phase 2 artifacts, fits informative
-training groups and evaluates every validation group. Candidate generation stays
-fixed; test days 625-708 were sealed during model selection and were evaluated
-only after Strategy A approval in Phase 4. See the exact
-[training and evaluation contract](docs/phase3_contract.md).
-
-```powershell
-.\.venv-phase2\python.exe -m pytest -q
-.\.venv-phase2\python.exe scripts/train_ranker.py
-```
-
-Model artifacts are written under `artifacts/models/lambdarank-v1/`, and the run
-writes measured results to `reports/phase3_validation.md` and `.json`. Existing
-run directories cannot be overwritten; pass `--output artifacts/models/<new-run>`
-for a deliberate new experiment. This command trains; inspecting results does
-not require rerunning it.
-
-The completed comparison achieved validation end-to-end NDCG@5 of **0.183540**
-versus **0.082016** for popularity, using all validation groups. Micro Recall@5
-was **7.2502%** versus **3.0206%**. This improvement is concentrated in repeat
-products: new-to-household hits fell from 332 to 11. See the
-[measured results](reports/phase3_validation.md) and
-[verification, limitations and handover](reports/phase3_checkpoint.md).
-Validation selected the boosting iteration; the final test result is recorded
-separately in Phase 4 above.
-
-Phase 3.1 [model diagnostics](reports/phase3_1_diagnostics.md) explain the discovery
-regression using the saved model and validation data. New products occupy 3.10%
-of LambdaRank's Top 5 slots versus 43.88% for popularity; 302 of 321 lost new hits
-still rank in its top five among new candidates alone. The diagnostic command
-below verifies and scores the existing model without training or changing it:
-
-```powershell
-.\.venv-phase2\python.exe scripts/diagnose_ranker.py
-```
-
-Outputs go to `artifacts/diagnostics/lambdarank-v1/`; existing output directories
-cannot be overwritten. See the report for feature importance, score distributions,
-representative purchases and tests. The proposed discovery experiment is evaluated
-in the Phase 3.2 checkpoint below.
-
-Phase 3.2 [controlled discovery results](reports/phase3_2_discovery.md) compare the
-original Top 5 with keeping ranks 1-4 and reserving rank 5 for the best unselected
-new-to-household candidate. New hits increase from 11 to 212, while total hits
-fall from 23,551 to 20,542 and NDCG@5 falls from 0.183540 to 0.170303.
-The [verification and decision record](reports/phase3_2_checkpoint.md) recommends
-retaining the original ranking. The alternative has not been promoted.
-
-```powershell
-.\.venv-phase2\python.exe scripts/experiment_discovery.py
-```
-
-This command uses saved validation scores and never trains. Results are already
-saved under `artifacts/experiments/discovery-v1/`; existing directories cannot be
-overwritten. The full regression suite passed 55 tests at this checkpoint.
-
-## Phase 2 data checkpoint
-
-Use the isolated Python 3.12 environment (`.venv-phase2/python.exe` on this Windows
-Conda setup). The original Python 3.14 Phase 1 `.venv` remains separate.
-
-To reproduce the runtime on Windows x86-64, with Conda installed:
-
-```powershell
-conda create --prefix .venv-phase2 --file environment/conda-win-64.lock.txt --yes
-.\.venv-phase2\python.exe -m pip install -r requirements-phase2.lock.txt
-.\.venv-phase2\python.exe scripts/smoke_environment.py
-.\.venv-phase2\python.exe -m pip check
-.\.venv-phase2\python.exe -m pytest -q
-.\.venv-phase2\python.exe scripts/build_training_data.py --config configs/data_v1.json
-```
-
-The explicit Conda lock captures the runtime; the pip lock captures exact resolved
-Python packages. The Conda lock is Windows-specific. A Linux lock and Docker image
-will be validated at the later serving checkpoint. `requirements-phase2.txt`
-records selected direct dependencies. Imports/native operations are smoke-tested
-without fitting a model or starting an API service.
-
-The builder writes ignored, versioned artifacts under `artifacts/data/retail-ranking-v1/`:
-rows, independent target sets, group offsets/sizes, per-cutoff diagnostics, schema,
-configuration and a checksum manifest. It refuses to overwrite an existing build;
-use `--output artifacts/data/<new-run-name>` for another run. `--limit-cutoffs 1`
-is a marked smoke build, not the complete dataset.
-
-Training cutoffs are 365–533 (25 weekly snapshots); validation cutoffs are 540–617
-(12). History includes the cutoff day; labels cover the next seven days. The loader
-excludes transactions after day 624. Test targets 625–708 are not materialized until
-model selection is finished and test evaluation is approved. The Phase 2 report
-contains data diagnostics; measured model results are in the Phase 3 report above.
-
-See [the shared contract](docs/phase2_contract.md) for exact candidate selection,
-25 ordered features, population/label definitions, agent ownership, and future
-ranking interfaces. [Phase 1 exploration](reports/data_exploration.md) remains the
-source-data baseline.
-
-The [data checkpoint report](reports/phase2_data_checkpoint.md) records measured
-coverage and group diagnostics. Regenerate it, including artifact checksum and
-group-offset verification, with:
-
-```powershell
-.\.venv-phase2\python.exe scripts/report_data_checkpoint.py
-```
-
-## Dataset provenance and license
-
-- Dataset: [Dunnhumby - The Complete Journey on Kaggle](https://www.kaggle.com/datasets/frtgnn/dunnhumby-the-complete-journey)
-- Source dataset license as displayed by Kaggle: [Database Contents License 1.0 (DbCL-1.0)](http://opendatacommons.org/licenses/dbcl/1.0/). Read the license before redistributing or using the database; the GitHub mirror is a download convenience, not a replacement for the source license.
-- Public no-Kaggle-account download mirror: [GitHub release v1.0-data](https://github.com/bltap-plmarket/dunnhumby-complete-journey/releases/tag/v1.0-data)
-- Release asset: `dunnhumby-complete-journey-data.zip` (135,859,064 bytes). Published SHA-256: `324288a8811c4ed86e85415fdee36f3692582e2cc9dd87866c0e333df237f782`.
-- This workspace's archive was downloaded from that release and its SHA-256 was verified before extraction. The extracted source contains the eight CSVs listed below.
-
-The GitHub project documents a two-year, household-level retail dataset. Its Kaggle page describes the dataset's scope and eight files. We treat those as provenance, not as measured results: row counts and quality statistics in [the exploration report](reports/data_exploration.md) are computed locally from the downloaded files.
-
-## Quick start (Windows PowerShell)
-
-Python 3.10 or newer is recommended.
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
-```
-
-Download the release archive into `data/raw/`, verify its checksum, and extract it there. The archive used for this Phase 1 run is already in that folder; to repeat the download:
-
-```powershell
-New-Item -ItemType Directory -Force data\raw | Out-Null
-$archive = 'data\raw\dunnhumby-complete-journey-data.zip'
-Invoke-WebRequest -UseBasicParsing `
-  -Uri 'https://github.com/bltap-plmarket/dunnhumby-complete-journey/releases/download/v1.0-data/dunnhumby-complete-journey-data.zip' `
-  -OutFile $archive
-Get-FileHash -Algorithm SHA256 $archive
-Expand-Archive -LiteralPath $archive -DestinationPath data\raw -Force
-```
-
-Compare the hash with the published SHA-256 above before extracting. Then run:
-
-```powershell
-.\.venv\Scripts\python scripts\ingest_data.py
-```
-
-The script expects the eight CSVs in `data/raw/`. It writes one Parquet file per table to `data/processed/` and replaces `reports/data_exploration.md` with counts, missingness, and key-relationship checks from the local files. Raw and processed data are ignored by Git because they are large; the exploration report is a small generated artifact and can be reviewed/versioned.
-
-## Project layout
-
-```text
-data/
-  raw/          Downloaded ZIP and source CSVs (not tracked)
-  processed/    Generated Parquet files (not tracked)
-reports/        Data exploration output
-scripts/        Reproducible ingestion and validation
-```
-
-## Script: 80/20 explanation
-
-`scripts/ingest_data.py` does three useful things: it checks that all eight expected input tables exist, converts each full CSV to Parquet without dropping or imputing rows, then computes source row/missing-value summaries plus transaction coverage and selected foreign-key checks. It writes those observations to the Markdown report. It deliberately keeps `DAY` as the dataset's relative integer day index because no calendar-date origin is supplied in these CSVs, and uses distinct transaction `PRODUCT_ID` values as the available SKU-count proxy.
-
-The checks are practical diagnostics, not a complete formal schema contract: this extract has no store dimension, and an unmatched key is surfaced for investigation rather than silently filtered. The transaction records describe household purchases and `SALES_VALUE`; they do not identify whether a sales representative accepted a recommendation.
-
-## Current scope boundary
-
-Phase 4 final held-out evaluation and the repeat-purchase diagnostic are complete.
-The historical FastAPI and Streamlit demo serves unchanged Strategy A; the discovery
-rule was not promoted. Minimal backend Docker packaging is prepared; its Linux build/run is pending
-Docker availability. SHAP remains a future checkpoint. Test results must not be
-used for model selection or tuning.
-MLflow and Databricks remain optional extensions.
+**No source-code license has been approved or added.** MIT remains a recommendation
+for the author's own code, not an adopted license.

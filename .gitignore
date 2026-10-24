@@ -9,6 +9,11 @@ venv/
 !.env.example
 
 # Credentials and local secrets
+.streamlit/secrets.toml
+.netrc
+_netrc
+.pypirc
+.git-credentials
 .aws/
 .ssh/
 secrets/
@@ -58,3 +63,6 @@ Thumbs.db
 !/data/raw/.gitkeep
 /data/processed/*
 !/data/processed/.gitkeep
+
+# Local VS Code settings
+.vscode/
