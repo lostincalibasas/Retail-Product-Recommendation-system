@@ -1,9 +1,9 @@
 """Small retail demo: all recommendation computation stays in FastAPI."""
 from html import escape
+import json
 import os
 from pathlib import Path
 import sys
-
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
@@ -31,24 +31,65 @@ st.title("A little help with your next basket")
 st.write("Five products ranked from household purchase patterns.")
 st.caption("Recommendations use historical purchase patterns at snapshot cutoff day 701. "
            "This is a historical offline demo, not live personalized shopping data.")
+mapping_path = Path(__file__).resolve().parent / "configs" / "demo_households.json"
+mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
 
-with st.form("recommendations_form"):
-    household_id = st.number_input("Household ID", min_value=1, max_value=2_147_483_647,
-                                   value=1, step=1, help="Enter a household ID from the historical snapshot. Try 1 to begin.")
-    submitted = st.form_submit_button("Get Recommendations", type="primary", width="stretch")
+household_options = {
+    item["alias"]: item["household_id"]
+    for item in mapping["households"]
+}
+
+
+def clear_recommendations():
+    st.session_state.pop("recommendation_result", None)
+    st.session_state.pop("recommendation_selection", None)
+
+
+# Selection widgets stay outside a form so changes immediately clear old results.
+selection_mode = st.radio(
+    "Household selection",
+    ["Featured Households", "All Households"],
+    horizontal=True,
+    key="household_selection_mode",
+    on_change=clear_recommendations,
+)
+if selection_mode == "Featured Households":
+    selected_alias = st.selectbox(
+        "Choose a household",
+        options=list(household_options),
+        key="featured_household_alias",
+        on_change=clear_recommendations,
+    )
+    household_id = household_options[selected_alias]
+    st.caption("Household names are fictional demo aliases.")
+else:
+    household_id = st.number_input(
+        "Household ID", value=1, step=1, key="all_household_id",
+        help="Enter a positive integer ID. The API checks whether it is available in the historical snapshot.",
+        on_change=clear_recommendations,
+    )
+
+selection = (selection_mode, int(household_id))
+if st.session_state.get("recommendation_selection") != selection:
+    clear_recommendations()
+submitted = st.button("Get Recommendations", type="primary", width="stretch")
 
 if submitted:
-    st.session_state.pop("recommendation_result", None)
+    clear_recommendations()
     try:
         with st.spinner("Finding your recommendations…"):
             result = fetch_recommendations(os.environ.get("RETAIL_API_URL", "http://127.0.0.1:8000"), int(household_id))
         st.session_state.recommendation_result = result
+        st.session_state.recommendation_selection = selection
     except DemoError as exc:
         st.error(str(exc))
 
 result = st.session_state.get("recommendation_result")
 if result:
-    st.subheader(f"Recommended for household {result['household_id']}")
+    result_label = f"Household {result['household_id']}"
+    if selection_mode == "Featured Households":
+        result_label = next(alias for alias, key in household_options.items() if key == result["household_id"])
+    st.subheader(f"Recommended for {result_label}")
     st.caption("Shown in recommendation order. Labels come from the dataset's product metadata; "
                "commercial product names and prices are not available.")
     for rank, product in enumerate(result["recommendations"], start=1):
